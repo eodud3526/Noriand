@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1013753043387",
+    "project_id": "noriand",
+    "storage_bucket": "noriand.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013753043387:android:fc5aec2473be070c684c9e",
+        "android_client_info": {
+          "package_name": "com.noriand"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013753043387-tv83mh8fg81bv6f1vlc12hoj0fqrbg3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmrUcQcEvkfS3hMkHAW1LHNTM0saEUwso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013753043387-tv83mh8fg81bv6f1vlc12hoj0fqrbg3k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

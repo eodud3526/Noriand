@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff" >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="20dp"
+        android:textColor="#000"
+        android:gravity="center"
+        android:text="로그인" />
+    <EditText
+        android:id="@+id/et_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:hint="이메일을 입력하세요."
+        android:inputType="textEmailAddress"
+        android:maxLength="50"
+        android:textCursorDrawable="@drawable/bgr_shape_cursor"
+        android:cursorVisible="true"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="14dp"
+        android:text="test@test.com"
+        android:imeOptions="actionNext"
+        android:background="@drawable/selector_btn_common_text_box_gray" />
+    <EditText
+        android:id="@+id/et_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:hint="비밀번호를 입력하세요."
+        android:inputType="textPassword"
+        android:maxLength="50"
+        android:textCursorDrawable="@drawable/bgr_shape_cursor"
+        android:cursorVisible="true"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="14dp"
+        android:text=""
+        android:imeOptions="actionDone"
+        android:background="@drawable/selector_btn_common_text_box_gray" />
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="204dp"
+        android:textSize="14dp"
+        android:textColor="#fff"
+        android:background="@drawable/selector_btn_common_purple"
+        android:stateListAnimator="@null"
+        android:text="로그인"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="302dp"
+        android:background="#eee" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="58dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginRight="4dp"
+            android:textSize="14dp"
+            android:textColor="#000"
+            android:gravity="center_vertical"
+            android:text="회원이 아니신가요?"/>
+        <TextView
+            android:id="@+id/tv_login_here"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textSize="14dp"
+            android:textColor="@color/color_link_purple_to_gray"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:text="회원가입"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textSize="14dp"
+            android:textColor="#000"
+            android:gravity="center_vertical"
+            android:text="을 눌러주세요."/>
+    </LinearLayout>
+</RelativeLayout>

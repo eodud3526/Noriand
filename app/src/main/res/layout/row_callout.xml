@@ -1,0 +1,24 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+        <RelativeLayout
+            android:id="@+id/rl_row_callout"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:background="@drawable/selector_bgr_purple_to_gray_corner" >
+                <TextView
+                    android:id="@+id/tv_row_callout_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:textSize="14dp"
+                    android:textColor="#fff"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    />
+        </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="20dp"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:text="장치 선택"
+        android:background="#6b37ff"/>
+
+    <com.noriand.view.VerticalSwipeRefreshLayout
+        android:id="@+id/srl_device_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:background="#eee"
+        >
+        <ListView
+            android:id="@+id/lv_device_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eee"
+            android:dividerHeight="0dp"
+            android:divider="@color/color_transparent"
+            android:listSelector="@color/color_transparent"
+            android:scrollbarThumbVertical="@color/color_purple"
+            android:scrollbarSize="2dp"
+            android:overScrollMode="never"/>
+    </com.noriand.view.VerticalSwipeRefreshLayout>
+    <RelativeLayout
+        android:id="@+id/rl_device_select_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:background="#fff">
+
+        <TextView
+            android:id="@+id/tv_device_select_empty"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:textSize="16dp"
+            android:gravity="center"
+            android:textColor="#999"
+            android:text="장치 목록이 없습니다."/>
+        <View
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_above="@+id/tv_device_select_empty"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ico_empty"
+            />
+        <View
+            android:id="@+id/v_device_select_empty_add"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/tv_device_select_empty"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selector_btn_device_add"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_device_select_auto_scroll"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/selector_btn_scroll_top"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:stateListAnimator="@null"
+        android:visibility="gone"/>
+</RelativeLayout>

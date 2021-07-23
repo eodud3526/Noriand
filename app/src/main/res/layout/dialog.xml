@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/rl_dialog_onebutton"
+        android:layout_width="300dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bgr_shape_common_white_rect"
+        android:visibility="visible" >
+        <RelativeLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/tv_dialog_onebutton"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:textColor="#555555"
+                android:textSize="16dp"
+				android:gravity="center"/>
+        	<Button
+			    android:id="@+id/btn_dialog_onebutton_confirm"
+			    android:layout_width="match_parent"
+			    android:layout_height="40dp"
+			    android:layout_alignParentBottom="true"
+			    android:background="@drawable/selector_btn_dialog_one_button"
+				android:stateListAnimator="@null"
+			    android:text="확인"
+			    android:textColor="#fff"
+			    android:textSize="14dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_dialog_twobutton"
+        android:layout_width="300dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bgr_shape_common_white_rect"
+        android:visibility="gone" >
+        <RelativeLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bgr_shape_common_white_rect" >
+
+            <TextView
+                android:id="@+id/tv_dialog_twobutton"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:textColor="#555555"
+                android:textSize="16dp"
+				android:gravity="center" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true" >
+                <View
+                    android:id="@+id/v_dialog_twobutton_center"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerHorizontal="true" />
+                <Button
+				    android:id="@+id/btn_dialog_twobutton_cancel"
+				    android:layout_width="match_parent"
+				    android:layout_height="40dp"
+				    android:layout_toLeftOf="@+id/v_dialog_twobutton_center"
+				    android:background="@drawable/selector_btn_dialog_twobutton_cancel"
+					android:stateListAnimator="@null"
+				    android:text="취소"
+				    android:textColor="#fff"
+				    android:textSize="14dp" />
+                <Button
+				    android:id="@+id/btn_dialog_twobutton_confirm"
+				    android:layout_width="match_parent"
+				    android:layout_height="40dp"
+				    android:layout_toRightOf="@+id/v_dialog_twobutton_center"
+				    android:background="@drawable/selector_btn_dialog_twobutton_confirm"
+					android:stateListAnimator="@null"
+				    android:text="확인"
+				    android:textColor="#fff"
+				    android:textSize="14dp" />
+            </RelativeLayout>
+            
+        </RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>

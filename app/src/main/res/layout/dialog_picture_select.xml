@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_dialog_picture_select"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/rl_dialog_login"
+        android:layout_width="300dp"
+        android:layout_height="108dp"
+        android:layout_gravity="center"
+        android:padding="4dp"
+        android:layout_centerInParent="true" >
+        <RelativeLayout 
+            android:id="@+id/rl_dialog_picture_select_camera"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:background="@drawable/selector_bgr_white_to_gray_corner_top" >
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginLeft="14dp"
+                android:background="@drawable/btn_capture_camera" />
+            <TextView 
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="60dp"
+				android:textSize="16dp"
+				android:duplicateParentState="true"
+				android:textColor="@color/color_link_black_to_purple"
+				android:textColorLink="@color/color_link_black_to_purple"
+				android:text="사진 촬영하기" />
+        </RelativeLayout>
+		<RelativeLayout 
+             android:id="@+id/rl_dialog_picture_select_gallery"
+             android:layout_width="match_parent"
+             android:layout_height="50dp"
+             android:layout_marginTop="50dp"
+             android:clickable="true"
+             android:background="@drawable/selector_bgr_white_to_gray_corner_bottom" >
+             <View
+                 android:layout_width="32dp"
+                 android:layout_height="32dp"
+                 android:layout_marginTop="9dp"
+                 android:layout_marginLeft="14dp"
+                 android:background="@drawable/btn_capture_camera" />
+             <TextView 
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="60dp"
+				android:textSize="16dp"
+				android:duplicateParentState="true"
+				android:textColor="@color/color_link_black_to_purple"
+				android:textColorLink="@color/color_link_black_to_purple"
+				android:text="내 갤러리에서 찾기" />
+       	</RelativeLayout>
+       	<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginTop="50dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:background="#eee" />
+    </RelativeLayout>
+</RelativeLayout>

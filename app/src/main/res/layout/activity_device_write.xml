@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#6b37ff">
+        <TextView
+            android:id="@+id/tv_device_write_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="기기 등록"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_device_write_prev"
+            android:layout_width="60dp"
+            android:layout_height="60dp" >
+            <View
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/selector_btn_prev_white"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_device_write_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:background="@drawable/selector_bgr_white_to_gray_corner">
+            <View
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:duplicateParentState="true"
+                android:background="@drawable/selector_btn_trash"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_device_write"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="90dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/et_device_write_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="290dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="14dp"
+        android:textColor="#000"
+        android:maxLength="20"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:hint="이름 입력"
+        android:background="@drawable/selector_btn_common_text_box_gray"/>
+    <EditText
+        android:id="@+id/et_device_write_ltid"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="14dp"
+        android:textColor="#000"
+        android:maxLength="50"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:hint="기기 고유번호 입력"
+        android:background="@drawable/selector_btn_common_text_box_gray"/>
+
+    <Button
+        android:id="@+id/btn_device_write_save"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:textSize="14dp"
+        android:textColor="#fff"
+        android:background="@drawable/selector_btn_common_purple"
+        android:stateListAnimator="@null"
+        android:text="등록"/>
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rl_row_safe_zone"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:background="@drawable/bgr_shape_common_white_rect_corner">
+                <TextView
+                    android:id="@+id/tv_row_safe_zone_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text=""/>
+                <RelativeLayout
+                    android:id="@+id/rl_row_safe_zone_pencil"
+                    android:layout_width="50dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_alignParentRight="true">
+                        <View
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="5dp"
+                            android:duplicateParentState="true"
+                            android:background="@drawable/selector_btn_pencil"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_row_safe_zone_trash"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true">
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:duplicateParentState="true"
+                            android:background="@drawable/selector_btn_trash"/>
+
+
+                </RelativeLayout>
+
+
+        </RelativeLayout>
+</RelativeLayout>

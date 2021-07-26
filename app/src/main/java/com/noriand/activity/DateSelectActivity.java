@@ -11,7 +11,6 @@ import com.noriand.R;
 import com.noriand.common.CommonPreferences;
 import com.noriand.network.ApiController;
 import com.noriand.view.dialog.CommonDialog;
-import com.noriand.vo.DeviceItemVO;
 import com.noriand.vo.TraceItemVO;
 import com.noriand.vo.request.RequestGetTraceArrayVO;
 import com.noriand.vo.response.ResponseGetTraceArrayVO;
@@ -23,7 +22,6 @@ public class DateSelectActivity extends BaseActivity implements DatePickerDialog
     private TextView dateTextView;
     private boolean mAutoHighlight;
     private ArrayList<TraceItemVO> mTraceList;
-    private DeviceItemVO mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +31,10 @@ public class DateSelectActivity extends BaseActivity implements DatePickerDialog
 
         setLayout();
         setListener();
-        setBase();
     }
 
     public void setLayout(){
         dateTextView = (TextView)findViewById(R.id.date_textview);
-    }
-
-    private void setBase() {
-        mItem = new DeviceItemVO();
-        mTraceList = new ArrayList<TraceItemVO>();
     }
 
     public void setListener(){
@@ -78,10 +70,11 @@ public class DateSelectActivity extends BaseActivity implements DatePickerDialog
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
         String from_date = "" + year + "-" + (++monthOfYear) + "-" + dayOfMonth;
         String to_date = "" + yearEnd + "-" + (++monthOfYearEnd) + "-" + dayOfMonthEnd;
-        dateTextView.setText(to_date);
         int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+        int deviceNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_DEVICE_NO);
+        dateTextView.setText(to_date);
         RequestGetTraceArrayVO requestItem = new RequestGetTraceArrayVO();
-        requestItem.deviceNo = mItem.no;
+        requestItem.deviceNo = deviceNo;
         requestItem.userNo = userNo;
         networkGetActionHistory(requestItem);
     }

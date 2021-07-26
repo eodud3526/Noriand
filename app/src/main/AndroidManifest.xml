@@ -81,6 +81,11 @@
 
         </activity>
 
+        <activity android:name=".activity.DateSelectActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
+        </activity>
+
         <service android:name=".service.FirebaseMessageService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

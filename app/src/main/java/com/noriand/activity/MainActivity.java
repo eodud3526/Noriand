@@ -402,14 +402,15 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mdl.closeDrawers();
-                moveSafeZoneListActivity();
+
+                //moveSafeZoneListActivity();
             }
         });
         mrlWalkActHistory.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 mdl.closeDrawers();
-                showDialogOneButton("기능 준비중입니다.");
+                moveDateSelectActivity();
             }
         });
 
@@ -954,7 +955,6 @@ public class MainActivity extends BaseActivity {
                             } catch(JSONException e) {
                             }
                         }
-
                         return;
                     }
                 }

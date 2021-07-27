@@ -105,6 +105,8 @@ public class ActionHistoryActivity extends BaseActivity {
         mApiController.getActionHistory(mActivity, requestItem, new ApiController.ApiGetActionHistoryListener() {
             @Override
             public void onSuccess(ResponseGetActionHistoryArrayVO item) {
+                ArrayList<String> viewDateList;
+                ArrayList<String> dist;
 
                 if(item == null) {
                     showDialogOneButton(getResources().getString(R.string.please_retry_network));
@@ -117,9 +119,6 @@ public class ActionHistoryActivity extends BaseActivity {
                 }
 
                 ActionHistoryItemVO[] actionHistoryArray = item.actionHistoryArray;
-                System.out.println("xxxxxxxxxxxxxx");
-                System.out.println(actionHistoryArray);
-                System.out.println("yyyyyyyyyyyyyy");
                 if(item.actionHistoryArray == null) {
                     showDialogOneButton("최근 기록이 없습니다.");
                     return;
@@ -134,6 +133,7 @@ public class ActionHistoryActivity extends BaseActivity {
                 for(int i=0; i<length; i++) {
                     mActionHistoryList.add(actionHistoryArray[i]);
                 }
+
             }
             @Override
             public void onFail() {

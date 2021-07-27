@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
+    <RelativeLayout
+        android:id="@+id/rl_row_action_history"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:background="@drawable/selector_bgr_white_to_gray_corner">
         <Button
             android:id="@+id/startDate"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
             android:inputType="date"
             android:text="시작 날짜" />
-
-        <TextView
-            android:text=" ~ "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/startDate"
-            android:id="@+id/text"/>
-
         <Button android:layout_height="wrap_content"
             android:id="@+id/endDate"
             android:layout_width="150dip"
-            android:layout_toRightOf="@+id/text"
+            android:layout_toRightOf="@+id/startDate"
             android:text="마지막 날짜"
             android:inputType="date"/>
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/searchButton"
             android:layout_toRightOf="@+id/endDate"
             android:text="조회"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:text="활동 거리 합계"
             android:layout_below="@id/startDate"/>
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:background="#fff">
         <ListView
             android:id="@+id/lv_action_history"
             android:layout_width="match_parent"
@@ -49,5 +54,5 @@
             android:scrollbarThumbVertical="@color/color_purple"
             android:scrollbarSize="2dp"
             android:overScrollMode="never"/>
-
+    </RelativeLayout>
 </RelativeLayout>

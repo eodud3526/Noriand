@@ -1,15 +1,22 @@
 package com.noriand.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.noriand.R;
 import com.noriand.common.CommonPreferences;
+import com.noriand.common.CommonTag;
 import com.noriand.network.ApiController;
 import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.ActionHistoryItemVO;
@@ -17,13 +24,18 @@ import com.noriand.vo.AlarmItemVO;
 import com.noriand.vo.request.RequestGetActionHistoryVO;
 import com.noriand.vo.response.ResponseGetActionHistoryArrayVO;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class ActionHistoryActivity extends BaseActivity {
     private ArrayList<ActionHistoryItemVO> mActionHistoryList;
+    private LayoutInflater mLayoutInflater = null;
+    private ActionHistoryAdapter mAdapter = null;
     private ListView mlv = null;
+
     Button startDate, endDate = null;
     Button searchButton = null;
     private int year=0, monthOfYear=0, dayOfMonth=0, yearEnd=0, monthOfYearEnd=0, dayOfMonthEnd=0;
@@ -46,6 +58,7 @@ public class ActionHistoryActivity extends BaseActivity {
         endDate = findViewById(R.id.endDate);
         searchButton = findViewById(R.id.searchButton);
         requestItem = new RequestGetActionHistoryVO();
+        mLayoutInflater = mActivity.getLayoutInflater();
     }
 
     public void setListener(){
@@ -122,9 +135,6 @@ public class ActionHistoryActivity extends BaseActivity {
                         ActionHistoryItemVO ActionHistoryItem = actionHistoryArray[i];
                         mActionHistoryList.add(ActionHistoryItem);
                     }
-                    System.out.println("xxxxxxxxxxxxxxxxxxxx");
-                    System.out.println(mActionHistoryList.get(0).toString());
-                    System.out.println("yyyyyyyyyyyyyyyyyyyy");
                 }
             }
             @Override
@@ -140,6 +150,7 @@ public class ActionHistoryActivity extends BaseActivity {
                 });
             }
         });
+        setAdapter();
     }
     public static String getMonth(int month){
         if(month < 10){
@@ -156,6 +167,64 @@ public class ActionHistoryActivity extends BaseActivity {
         else{
             return String.valueOf(day);
         }
+    }
+
+    private class ActionHistoryAdapter extends BaseAdapter {
+        public ActionHistoryAdapter() {
+        }
+        @Override
+        public int getCount() {
+            return mActionHistoryList.size();
+        }
+        @Override
+        public ActionHistoryItemVO getItem(int position) {
+            return mActionHistoryList.get(position);
+        }
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ActionHistoryActivity.ViewHolder holder = null;
+            if(convertView != null) {
+                holder = (ActionHistoryActivity.ViewHolder)convertView.getTag();
+            } else {
+                holder = new ActionHistoryActivity.ViewHolder();
+                convertView = mLayoutInflater.inflate(R.layout.row_action_history, parent, false);
+                holder.rl = (RelativeLayout)convertView.findViewById(R.id.rl_row_action_history);
+                convertView.setTag(holder);
+            }
+
+            final int nowPosition = position;
+            ActionHistoryItemVO item = mActionHistoryList.get(position);
+            holder.rl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActionHistoryItemVO item = mActionHistoryList.get(nowPosition);
+                    String strItem = "";
+                    try {
+                        JSONObject jsonObject = item.getJSONObject();
+                        if(jsonObject != null) {
+                            strItem = jsonObject.toString();
+                        }
+                    } catch (JSONException e) {
+                    }
+                    Intent intent = getIntent();
+                    intent.putExtra("strItem", strItem);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+            return convertView;
+        }
+    }
+    private class ViewHolder {
+        private RelativeLayout rl = null;
+    }
+    private void setAdapter() {
+        mAdapter = new ActionHistoryAdapter();
+        mlv.setAdapter(mAdapter);
     }
 
 }

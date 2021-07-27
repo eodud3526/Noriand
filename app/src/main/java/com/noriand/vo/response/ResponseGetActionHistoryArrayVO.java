@@ -1,13 +1,13 @@
 package com.noriand.vo.response;
-
 import com.noriand.vo.ActionHistoryItemVO;
+import com.noriand.vo.AlarmItemVO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ResponseGetActionHistoryArrayVO extends ResponseVO {
-    public ActionHistoryItemVO[] actionHistoryArray = null;
+    public ActionHistoryItemVO actionHistoryArray[] = null;
 
     public ResponseGetActionHistoryArrayVO() {
     }
@@ -17,20 +17,21 @@ public class ResponseGetActionHistoryArrayVO extends ResponseVO {
         if(jsonObject == null) {
             return;
         }
-
         if(!jsonObject.isNull("actionHistoryArray")) {
             JSONArray jsonArray = jsonObject.getJSONArray("actionHistoryArray");
             if(jsonArray != null) {
                 int size = jsonArray.length();
-                if(size > 0) {
+                if (size > 0) {
                     actionHistoryArray = new ActionHistoryItemVO[size];
-                    for(int i=0; i<size; i++) {
+                    for (int i = 0; i < size; i++) {
                         ActionHistoryItemVO item = new ActionHistoryItemVO();
                         item.parseJSONObject(jsonArray.getJSONObject(i));
                         actionHistoryArray[i] = item;
                     }
                 }
             }
+
         }
+
     }
 }

@@ -13,10 +13,12 @@ import com.noriand.common.CommonPreferences;
 import com.noriand.network.ApiController;
 import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.ActionHistoryItemVO;
+import com.noriand.vo.AlarmItemVO;
 import com.noriand.vo.request.RequestGetActionHistoryVO;
 import com.noriand.vo.response.ResponseGetActionHistoryArrayVO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class ActionHistoryActivity extends BaseActivity {
@@ -105,35 +107,25 @@ public class ActionHistoryActivity extends BaseActivity {
         mApiController.getActionHistory(mActivity, requestItem, new ApiController.ApiGetActionHistoryListener() {
             @Override
             public void onSuccess(ResponseGetActionHistoryArrayVO item) {
-                ArrayList<String> viewDateList;
-                ArrayList<String> dist;
-
                 if(item == null) {
                     showDialogOneButton(getResources().getString(R.string.please_retry_network));
                     return;
                 }
-
                 if(!item.isConfirm) {
                     showDialogOneButton("최근 기록이 없습니다.");
                     return;
                 }
-
                 ActionHistoryItemVO[] actionHistoryArray = item.actionHistoryArray;
-                if(item.actionHistoryArray == null) {
-                    showDialogOneButton("최근 기록이 없습니다.");
-                    return;
+                if(actionHistoryArray != null) {
+                    int size = actionHistoryArray.length;
+                    for (int i = 0; i < size; i++) {
+                        ActionHistoryItemVO ActionHistoryItem = actionHistoryArray[i];
+                        mActionHistoryList.add(ActionHistoryItem);
+                    }
+                    System.out.println("xxxxxxxxxxxxxxxxxxxx");
+                    System.out.println(mActionHistoryList.get(0).toString());
+                    System.out.println("yyyyyyyyyyyyyyyyyyyy");
                 }
-
-                int length = actionHistoryArray.length;
-                if(length == 0) {
-                    showDialogOneButton("최근 기록이 없습니다.");
-                    return;
-                }
-
-                for(int i=0; i<length; i++) {
-                    mActionHistoryList.add(actionHistoryArray[i]);
-                }
-
             }
             @Override
             public void onFail() {

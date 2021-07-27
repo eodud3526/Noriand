@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout mrlDeviceSetting = null;
     private RelativeLayout mrlVoucher = null;
     private RelativeLayout mrlSafeZone = null;
-    private RelativeLayout mrlWalkActHistory = null;
+    private RelativeLayout mrlActionHistory = null;
 
     private RelativeLayout mrlRefresh = null;
     private RelativeLayout mrlWhat = null;
@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity {
         mrlDeviceSetting = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_device_setting);
         mrlVoucher = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_voucher);
         mrlSafeZone = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_safe_zone);
-        mrlWalkActHistory = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_walk_act_history);
+        mrlActionHistory = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_action_history);
 
         mtvToday = (TextView)findViewById(R.id.tv_main_today);
         mtvAddress = (TextView)findViewById(R.id.tv_main_address);
@@ -184,7 +184,6 @@ public class MainActivity extends BaseActivity {
                     if(mTimer == null) {
                         return;
                     }
-
                     int deviceNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_DEVICE_NO);
                     RequestGetDeviceLocationVO requestItem = new RequestGetDeviceLocationVO();
                     requestItem.deviceNo = deviceNo;
@@ -226,7 +225,6 @@ public class MainActivity extends BaseActivity {
         mMapViewEventListener = new MapView.MapViewEventListener() {
             @Override
             public void onMapViewInitialized(MapView mapView) {
-                System.out.println("xxx");
             }
 
             @Override
@@ -406,11 +404,11 @@ public class MainActivity extends BaseActivity {
                 //moveSafeZoneListActivity();
             }
         });
-        mrlWalkActHistory.setOnClickListener(new View.OnClickListener(){
+        mrlActionHistory.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 mdl.closeDrawers();
-                moveDateSelectActivity();
+                moveActionHistoryActivity();
             }
         });
 
@@ -925,8 +923,8 @@ public class MainActivity extends BaseActivity {
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
-    public void moveDateSelectActivity() {
-        Intent intent = new Intent(mActivity, DateSelectActivity.class);
+    public void moveActionHistoryActivity() {
+        Intent intent = new Intent(mActivity, ActionHistoryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);

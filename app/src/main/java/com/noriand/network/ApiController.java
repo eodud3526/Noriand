@@ -10,6 +10,7 @@ import com.noriand.constant.ServerConstant;
 import com.noriand.util.MultipartUtil;
 import com.noriand.vo.request.RequestDeleteDeviceVO;
 import com.noriand.vo.request.RequestDeleteSafeZoneVO;
+import com.noriand.vo.request.RequestGetActionHistoryVO;
 import com.noriand.vo.request.RequestGetAlarmArrayVO;
 import com.noriand.vo.request.RequestGetDeviceArrayVO;
 import com.noriand.vo.request.RequestGetDeviceLocationVO;
@@ -22,6 +23,7 @@ import com.noriand.vo.request.RequestUpdateDeviceSettingVO;
 import com.noriand.vo.request.RequestUploadFileVO;
 import com.noriand.vo.request.RequestWriteDeviceVO;
 import com.noriand.vo.request.RequestWriteSafeZoneVO;
+import com.noriand.vo.response.ResponseGetActionHistoryArrayVO;
 import com.noriand.vo.response.ResponseGetAlarmArrayVO;
 import com.noriand.vo.response.ResponseGetDeviceArrayVO;
 import com.noriand.vo.response.ResponseGetDeviceLocationVO;
@@ -868,6 +870,48 @@ public class ApiController {
 		}).start();
 	}
 
+	public void getActionHistory(final BaseActivity activity, final RequestGetActionHistoryVO requestItem, final ApiGetActionHistoryListener listener) {
+		if(!checkNetwork(activity.getApplicationContext())) {
+			listener.onFail();
+			return;
+		}
+
+		String requestUrl = ServerConstant.getUrl(ServerConstant.APP_URL);
+		String param = requestItem.getParameter();
+
+		if(!requestItem.isSilent) {
+			activity.startProgress();
+		}
+		requestPost(requestUrl, param, new NetworkFinishListener() {
+			@Override
+			public void onFinish(String result) {
+				ResponseGetActionHistoryArrayVO item = null;
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					item = new ResponseGetActionHistoryArrayVO();
+					item.parseJSONObject(jsonObject);
+				} catch (JSONException e) {
+					activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							activity.endProgress();
+							listener.onFail();
+						}
+					});
+					return;
+				}
+				final ResponseGetActionHistoryArrayVO responseItem = item;
+				activity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						activity.endProgress();
+						listener.onSuccess(responseItem);
+					}
+				});
+			}
+		});
+	}
+
 
 
 
@@ -927,6 +971,11 @@ public class ApiController {
 
 	public interface ApiWriteDeviceListener {
 		void onSuccess(ResponseWriteDeviceVO item);
+		void onFail();
+	}
+
+	public interface ApiGetActionHistoryListener{
+		void onSuccess(ResponseGetActionHistoryArrayVO item);
 		void onFail();
 	}
 }

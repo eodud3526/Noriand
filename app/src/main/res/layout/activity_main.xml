@@ -404,7 +404,7 @@
                         android:layout_height="1dp"
                         android:background="#ccc" />
                     <RelativeLayout
-                        android:id="@+id/rl_main_sub_menu_walk_act_history"
+                        android:id="@+id/rl_main_sub_menu_action_history"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:background="@drawable/selector_bgr_white_to_gray">

@@ -11,4 +11,5 @@
     <color name="color_white">#ffffff</color>
     <color name="color_black">#000000</color>
     <color name="color_transparent_shadow">#66000000</color>
+    <color name="color_blue">#00cfff</color>
 </resources>

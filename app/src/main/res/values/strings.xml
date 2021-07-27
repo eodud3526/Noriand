@@ -4,4 +4,6 @@
 
     <string name="retry_network">서버와 통신에 실패했습니다. 다시 시도하시겠습니까?</string>
     <string name="please_retry_network">서버와 통신에 실패했습니다. 다시 시도해 주세요.</string>
+
+    <string name="textview_message" formatted="false">%1$20s %2$20s %3$20s \n</string>
 </resources>

@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class MainActivity extends BaseActivity {
 // --------------------------------------------------
     // Common
@@ -119,6 +118,7 @@ public class MainActivity extends BaseActivity {
         setBase();
         setLayout();
         setListener();
+        //getHashKey(); 해시 키 찾는 함수 호출 메인화면 진입시 Run 창에서 확인가능
     }
 
     private void setBase() {
@@ -400,8 +400,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mdl.closeDrawers();
-
-                //moveSafeZoneListActivity();
+                moveSafeZoneListActivity();
             }
         });
         mrlActionHistory.setOnClickListener(new View.OnClickListener(){
@@ -986,4 +985,28 @@ public class MainActivity extends BaseActivity {
         mmv.removeAllPOIItems();
         mrlMap.addView(mmv);
     }
+    /* // 해시 키 찾는 함수
+    private void getHashKey(){
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (packageInfo == null)
+            Log.e("KeyHash", "KeyHash:null");
+
+        for (Signature signature : packageInfo.signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            } catch (NoSuchAlgorithmException e) {
+                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
+            }
+        }
+    }
+
+     */
+
 }

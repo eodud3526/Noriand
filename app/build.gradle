@@ -3,6 +3,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\user64\\Desktop\\apk_release_key.jks')
+            keyAlias 'key0'
+            storePassword 'noriand2017@'
+            keyPassword 'noriand2017@'
+        }
+        release {
+            storeFile file('C:\\Users\\user64\\Desktop\\apk_release_key.jks')
+            storePassword 'noriand2017@'
+            keyAlias 'key0'
+            keyPassword 'noriand2017@'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 

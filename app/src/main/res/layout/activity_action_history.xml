@@ -4,13 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
-        android:id="@+id/rl_row_action_history"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#6b37ff">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="보행 활동 내역"/>
+        <RelativeLayout
+            android:id="@+id/rl_action_history_prev"
+            android:layout_width="60dp"
+            android:layout_height="60dp" >
+            <View
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/selector_btn_prev_white"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
+        android:layout_marginTop="60dp"
         android:background="@drawable/selector_bgr_white_to_gray_corner">
         <Button
             android:id="@+id/startDate"
@@ -30,29 +50,71 @@
             android:id="@+id/searchButton"
             android:layout_toRightOf="@+id/endDate"
             android:text="조회"/>
+
         <TextView
+            android:id="@+id/sum_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:layout_below="@id/startDate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="10dp"
             android:text="활동 거리 합계"
-            android:layout_below="@id/startDate"/>
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sum_of_dist"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/searchButton"
+            android:enabled="false"
+            android:textStyle="bold"
+            android:textColor="#ffFF6000"
+            android:layout_marginBottom="30dp"
+            android:background="#ffffffff"
+            android:layout_marginRight="24dp"/>
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        android:background="#fff">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="70dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="일자"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="거리"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="40dp"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:background="@drawable/selector_bgr_white_to_gray_corner">
+
         <ListView
             android:id="@+id/lv_action_history"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#eee"
-            android:dividerHeight="0dp"
-            android:divider="@color/color_transparent"
-            android:listSelector="@color/color_transparent"
-            android:scrollbarThumbVertical="@color/color_purple"
-            android:scrollbarSize="2dp"
-            android:overScrollMode="never"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
+
 </RelativeLayout>

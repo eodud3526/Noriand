@@ -13,13 +13,13 @@ public class ActionHistoryItemVO {
     public String dist = "";
 
     public void parseJSONObject(JSONObject jsonObject) throws JSONException {
-        if(jsonObject == null) {
+        if (jsonObject == null) {
             return;
         }
-        if(!jsonObject.isNull("viewDate")) {
+        if (!jsonObject.isNull("viewDate")) {
             viewDate = jsonObject.getString("viewDate");
         }
-        if(!jsonObject.isNull("dist")) {
+        if (!jsonObject.isNull("dist")) {
             dist = jsonObject.getString("dist");
         }
     }
@@ -33,5 +33,12 @@ public class ActionHistoryItemVO {
         return jsonObject;
     }
 
-    public String toString() {return "viewDate : " + viewDate + " dist : " + dist;}
+    public String toString() {
+        return addDash(viewDate) + "                                                        " + String.format("%,d", Integer.parseInt(dist)) + "m";
+    }
+
+    public String addDash(String s){
+        s = s.substring(0,4) + "-" + s.substring(4,6) + "-" + s.substring(6);
+        return s;
+    }
 }

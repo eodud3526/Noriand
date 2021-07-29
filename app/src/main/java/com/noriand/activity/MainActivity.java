@@ -3,6 +3,7 @@ package com.noriand.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.noriand.R;
 import com.noriand.common.CommonPreferences;
 import com.noriand.constant.ServerConstant;
+import com.noriand.listener.SoftHandler;
+import com.noriand.listener.SoftListener;
 import com.noriand.network.ApiController;
 import com.noriand.util.StringUtil;
 import com.noriand.view.dialog.CommonDialog;
@@ -42,7 +45,9 @@ import net.daum.mf.map.api.MapView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -105,7 +110,9 @@ public class MainActivity extends BaseActivity {
     private ArrayList<TraceItemVO> mTraceList = null;
     private String mToday = "";
 
-
+    private int refresh_interval;
+    private boolean isPressBack = false;
+    private SoftHandler mExitCheckHandler = null;
     // --------------------------------------------------
 
     @Override
@@ -124,6 +131,12 @@ public class MainActivity extends BaseActivity {
     private void setBase() {
         mItem = new DeviceItemVO();
         mTraceList = new ArrayList<TraceItemVO>();
+        mExitCheckHandler = new SoftHandler(new SoftListener() {
+            @Override
+            public void handleMessage(Message msg, int what) {
+                isPressBack = false;
+            }
+        }, 0);
     }
 
     private void setLayout() {
@@ -215,6 +228,7 @@ public class MainActivity extends BaseActivity {
             return;
         }
         refresh();
+
 
         if(mTimer != null) {
 
@@ -334,12 +348,12 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onDrawerOpened(View arg0) {
-//                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_close);
+                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_close); // 주석확인
             }
 
             @Override
             public void onDrawerClosed(View arg0) {
-//                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_menu);
+                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_menu); // 주석확인
             }
         };
         mdl.addDrawerListener(mDrawerListener);
@@ -470,6 +484,7 @@ public class MainActivity extends BaseActivity {
         } else {
             drawMarker();
         }
+        refresh_interval = mItem.refreshInterval;
     }
 
     private void drawMarker() {
@@ -572,7 +587,7 @@ public class MainActivity extends BaseActivity {
         if(userNo == 0 || mItem == null || mItem.no == 0) {
             return;
         }
-
+        refresh_interval = mItem.refreshInterval;
         RequestGetNowLocationVO requestItem = new RequestGetNowLocationVO();
         requestItem.isSilent = false;
         requestItem.userNo = userNo;
@@ -710,8 +725,12 @@ public class MainActivity extends BaseActivity {
                             }
                         }
                     }
+                    // mtvToday.setText(today);
+                    // 현재시간 - interval
+                    long date = Calendar.getInstance().getTimeInMillis() - (1000 * 60 * refresh_interval);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    mtvToday.setText(sdf.format(date));
 
-                    mtvToday.setText(today);
                     if (mmv != null && !StringUtil.isEmpty(xTemp) && !StringUtil.isEmpty(yTemp)) {
                         mmv.removeAllPOIItems();
                         double x = Double.parseDouble(xTemp);
@@ -1008,5 +1027,6 @@ public class MainActivity extends BaseActivity {
     }
 
      */
+
 
 }

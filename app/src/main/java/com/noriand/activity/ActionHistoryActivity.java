@@ -148,7 +148,7 @@ public class ActionHistoryActivity extends BaseActivity {
                     }
                 }
                 sum = (EditText)findViewById(R.id.sum_of_dist);
-                sum.setText(String.valueOf(sum_of_dist) + "m");
+                sum.setText(String.format("%,d", Integer.parseInt(String.valueOf(sum_of_dist))) + "m");
                 mlv = (ListView) findViewById(R.id.lv_action_history);
                 mAdapter = new ArrayAdapter<ActionHistoryItemVO>(ActionHistoryActivity.this,
                         android.R.layout.simple_list_item_1, mActionHistoryList);

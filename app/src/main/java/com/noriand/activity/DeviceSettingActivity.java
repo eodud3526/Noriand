@@ -374,4 +374,6 @@ public class DeviceSettingActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
 }

@@ -137,6 +137,7 @@ public class DeviceSelectActivity extends BaseActivity {
         mlv.addFooterView(rlFooter);
 
         mbtAutoScrollTop = (Button)findViewById(R.id.btn_device_select_auto_scroll);
+
     }
 
     private void setListener() {
@@ -186,6 +187,7 @@ public class DeviceSelectActivity extends BaseActivity {
         };
         mvEmptyAdd.setOnClickListener(addDeviceLister);
         mvFooterAdd.setOnClickListener(addDeviceLister);
+
     }
 
     private void setAdapter() {
@@ -332,7 +334,6 @@ public class DeviceSelectActivity extends BaseActivity {
                 holder.vSafeZone.setBackgroundResource(R.drawable.ico_safe_zone_pressed);
             }
 
-
             holder.rlMap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -360,10 +361,10 @@ public class DeviceSelectActivity extends BaseActivity {
                     CommonPreferences.putInt(mActivity, CommonPreferences.TAG_DEVICE_NO, item.no);
                     CommonPreferences.putString(mActivity, CommonPreferences.TAG_DEVICE_LTID, item.ltid);
                     DeviceItemVO item = mList.get(nowPosition);
+                    //moveMainSettingActivity(item);
                     moveDeviceSettingActivity(item);
                 }
             });
-
             return convertView;
         }
     }
@@ -380,7 +381,6 @@ public class DeviceSelectActivity extends BaseActivity {
         private RelativeLayout rlPeople = null;
         private RelativeLayout rlSetting = null;
     }
-
 
     public void moveMainActivity(DeviceItemVO item) {
         String strItem = "";
@@ -422,6 +422,24 @@ public class DeviceSelectActivity extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+    }
+
+    public void moveMainSettingActivity(DeviceItemVO item) {
+        String strItem = "";
+        try {
+            JSONObject jsonObject = item.getJSONObject();
+            if(jsonObject != null) {
+                strItem = jsonObject.toString();
+            }
+        } catch (JSONException e) {
+        }
+
+        Intent intent = new Intent(mActivity, MainSettingActivity.class);
+        intent.putExtra("strItem", strItem);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        finish();
     }
 
 

@@ -197,7 +197,20 @@ public class DeviceWriteActivity extends BaseActivity {
                     showDialogOneButton(getResources().getString(R.string.please_retry_network));
                     return;
                 }
+                if(item.isExistDevice){
+                    CommonPreferences.resetPreferences(getApplicationContext());
+                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 있습니다.", new CommonDialog.DialogConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            StringUtil.selectionLast(metLtid);
+                        }
+                        @Override
+                        public void onCancel() {
 
+                        }
+                    });
+                    return;
+                }
                 if(!item.isConfirm) {
                     showDialogOneButton("통신에 실패했습니다. 기기 정보를 확인 후, 다시 시도해 주세요.", new CommonDialog.DialogConfirmListener() {
                         @Override
@@ -210,6 +223,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
+
 
                 String message = "기기가 등록되었습니다.";
                 if(isEditMode) {

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class ResponseWriteDeviceVO extends ResponseVO {
 	public int no = 0;
+	public boolean isExistDevice = false;
 
 	public ResponseWriteDeviceVO() {
 	}
@@ -17,6 +18,11 @@ public class ResponseWriteDeviceVO extends ResponseVO {
 
 		if(!jsonObject.isNull("no")) {
 			no = jsonObject.getInt("no");
+		}
+
+		if(!jsonObject.isNull("isExistDevice")) {
+			String temp = jsonObject.getString("isExistDevice");
+			isExistDevice = "Y".equals(temp);
 		}
 	}
 }

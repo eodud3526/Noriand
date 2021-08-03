@@ -9,6 +9,7 @@ public class ActionHistoryItemVO {
     public int deviceNo = 0;
     public String fromDt = "";
     public String toDt = "";
+    public String ltid = "";
     public String viewDate = "";
     public String dist = "";
 
@@ -28,6 +29,7 @@ public class ActionHistoryItemVO {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userNo", userNo);
         jsonObject.put("deviceNo", deviceNo);
+        jsonObject.put("ltid", ltid);
         jsonObject.put("fromDt", fromDt);
         jsonObject.put("toDt", toDt);
         return jsonObject;

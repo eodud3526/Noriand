@@ -3,7 +3,6 @@ package com.noriand.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,8 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.noriand.R;
 import com.noriand.common.CommonPreferences;
 import com.noriand.constant.ServerConstant;
-import com.noriand.listener.SoftHandler;
-import com.noriand.listener.SoftListener;
 import com.noriand.network.ApiController;
 import com.noriand.util.StringUtil;
 import com.noriand.view.dialog.CommonDialog;
@@ -36,9 +33,12 @@ import com.noriand.vo.response.ResponseGetNowLocationVO;
 import com.noriand.vo.response.ResponseGetTraceArrayVO;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
+import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapCircle;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapPointBounds;
+import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
@@ -110,9 +110,8 @@ public class MainActivity extends BaseActivity {
     private ArrayList<TraceItemVO> mTraceList = null;
     private String mToday = "";
 
-    private int refresh_interval;
-    private boolean isPressBack = false;
-    private SoftHandler mExitCheckHandler = null;
+    private int refresh_interval = 0;
+    private boolean is_first_tapped = false;
     // --------------------------------------------------
 
     @Override
@@ -131,12 +130,7 @@ public class MainActivity extends BaseActivity {
     private void setBase() {
         mItem = new DeviceItemVO();
         mTraceList = new ArrayList<TraceItemVO>();
-        mExitCheckHandler = new SoftHandler(new SoftListener() {
-            @Override
-            public void handleMessage(Message msg, int what) {
-                isPressBack = false;
-            }
-        }, 0);
+        is_first_tapped = false;
     }
 
     private void setLayout() {
@@ -652,6 +646,7 @@ public class MainActivity extends BaseActivity {
         }
 
         mmv.removeAllPOIItems();
+        MapPolyline mpl = new MapPolyline();
 
         for(int i=0; i<size; i++) {
             TraceItemVO item = mTraceList.get(i);
@@ -673,8 +668,16 @@ public class MainActivity extends BaseActivity {
                 marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                 marker.setCustomImageAnchor(0.5f, 0.5f);
                 mmv.addPOIItem(marker);
+
+                mpl.setTag(i); /* polyline Tag 번호 지정 */
+                mpl.setLineColor(Color.argb(128, 255, 51, 0)); /* polyline 색 지정 */
+                mpl.addPoint(mapPoint);
+                mmv.addPolyline(mpl);
             }
         }
+        MapPointBounds mpb = new MapPointBounds(mpl.getMapPoints());
+        int padding = 100;
+        mmv.moveCamera(CameraUpdateFactory.newMapPointBounds(mpb, padding));
     }
 
 
@@ -727,12 +730,35 @@ public class MainActivity extends BaseActivity {
                     }
                     // mtvToday.setText(today);
                     // 현재시간 - interval
-                    long date = Calendar.getInstance().getTimeInMillis() - (1000 * 60 * refresh_interval);
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    mtvToday.setText(sdf.format(date));
+                    if (is_first_tapped == false){ // 초기 상태
+                        mtvToday.setText(today);
+                        is_first_tapped = true;
+                    }
+                    else {
+                        Thread t = new Thread() {
+                            public void run() {
+                                try {
+                                    while (!isInterrupted()) {
+                                        Thread.sleep(1000 * 60 * refresh_interval);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                long date = Calendar.getInstance().getTimeInMillis();
+                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                mtvToday.setText(sdf.format(date));
+                                            }
+                                        });
+                                    }
+                                } catch (InterruptedException e) {
 
+                                }
+                            }
+                        };
+                        t.start();
+                    }
                     if (mmv != null && !StringUtil.isEmpty(xTemp) && !StringUtil.isEmpty(yTemp)) {
                         mmv.removeAllPOIItems();
+                        mmv.removeAllPolylines();
                         double x = Double.parseDouble(xTemp);
                         double y = Double.parseDouble(yTemp);
                         MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(y, x);

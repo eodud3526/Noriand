@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,8 +33,6 @@ public class MainSettingActivity extends BaseActivity{
     private DeviceItemVO mItem = null;
 
 
-    private Button mbtnMenu = null;
-
     private DrawerLayout mdl = null;
     private RelativeLayout mrlSubMenuArea = null;
     private DrawerLayout.DrawerListener mDrawerListener = null;
@@ -43,7 +40,7 @@ public class MainSettingActivity extends BaseActivity{
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_setting);
         setStatusBar(Color.WHITE);
 
         setLayout();
@@ -51,7 +48,6 @@ public class MainSettingActivity extends BaseActivity{
     }
 
     public void setLayout(){
-        mbtnMenu = (Button)findViewById(R.id.btn_main_submenu);
         mdl = (DrawerLayout)findViewById(R.id.dl_main);
         mrlSubPencil = (RelativeLayout)findViewById(R.id.rl_main_submenu_pencil);
         mrlSubMenuArea = (RelativeLayout)findViewById(R.id.rl_main_sub_menu);
@@ -78,32 +74,19 @@ public class MainSettingActivity extends BaseActivity{
 
             @Override
             public void onDrawerOpened(View arg0) {
-                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_close); // 주석확인
             }
 
             @Override
             public void onDrawerClosed(View arg0) {
-                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_menu); // 주석확인
             }
         };
         mdl.addDrawerListener(mDrawerListener);
-        mbtnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mdl.isDrawerOpen(mrlSubMenuArea)) {
-                    mdl.closeDrawers();
-                } else {
-                    mdl.openDrawer(mrlSubMenuArea);
-                }
-            }
-        });
         mrlSubPencil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveDeviceUpdateActivity(mItem);
             }
         });
-
         mrlSubDeviceNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

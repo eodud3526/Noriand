@@ -1,9 +1,11 @@
 package com.noriand.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,8 +18,12 @@ import com.noriand.common.CommonPreferences;
 import com.noriand.network.ApiController;
 import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.ActionHistoryItemVO;
+import com.noriand.vo.DeviceItemVO;
 import com.noriand.vo.request.RequestGetActionHistoryVO;
 import com.noriand.vo.response.ResponseGetActionHistoryArrayVO;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,9 +84,10 @@ public class ActionHistoryActivity extends BaseActivity {
                         fromDt = "" + year + getMonth(monthOfYear) + getDay(dayOfMonth);
                     }
                 }, year, monthOfYear, dayOfMonth);
-                dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
                 c.add(Calendar.MONTH, -2);
                 dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+                c.add(Calendar.MONTH, 1);
+                dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
                 dpd.show();
             }
         });
@@ -99,9 +106,9 @@ public class ActionHistoryActivity extends BaseActivity {
                             toDt = "" + yearEnd + getMonth(monthOfYearEnd) + getDay(dayOfMonthEnd);
                         }
                     }, yearEnd, monthOfYearEnd, dayOfMonthEnd);
-                    dpd.getDatePicker().setMinDate(c.getTimeInMillis());
-                    c.add(Calendar.MONTH, 2);
                     dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
+                    c.add(Calendar.MONTH, -1);
+                    dpd.getDatePicker().setMinDate(c.getTimeInMillis());
                     dpd.show();
                 }
             }
@@ -111,8 +118,11 @@ public class ActionHistoryActivity extends BaseActivity {
             public void onClick(View v) {
                 int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
                 int deviceNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_DEVICE_NO);
+                String ltid = CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID);
+
                 requestItem.userNo = userNo;
                 requestItem.deviceNo = deviceNo;
+                requestItem.ltid = ltid;
                 requestItem.fromDt = fromDt;
                 requestItem.toDt = toDt;
                 networkGetActionHistory(requestItem);
@@ -153,6 +163,13 @@ public class ActionHistoryActivity extends BaseActivity {
                 mAdapter = new ArrayAdapter<ActionHistoryItemVO>(ActionHistoryActivity.this,
                         android.R.layout.simple_list_item_1, mActionHistoryList);
                 mlv.setAdapter(mAdapter);
+                mlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        showDialogOneButton("기능 준비중입니다.");
+                       // moveActionHistoryTraceActivity();
+                    }
+                });
             }
             @Override
             public void onFail() {
@@ -187,6 +204,23 @@ public class ActionHistoryActivity extends BaseActivity {
     private void onBack() {
         finish();
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+    }
+
+    public void moveActionHistoryTraceActivity(DeviceItemVO item) {
+        String strItem = "";
+        try {
+            JSONObject jsonObject = item.getJSONObject();
+            if(jsonObject != null) {
+                strItem = jsonObject.toString();
+            }
+        } catch (JSONException e) {
+        }
+
+        Intent intent = new Intent(mActivity, DeviceWriteActivity.class);
+        intent.putExtra("strItem", strItem);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 }
 

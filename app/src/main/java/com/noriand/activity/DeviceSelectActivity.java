@@ -59,13 +59,11 @@ public class DeviceSelectActivity extends BaseActivity {
     private View mvFooterAdd = null;
 
     private Button mbtAutoScrollTop = null;
-
     //--------------------------------------------------
     // Data
     private ArrayList<DeviceItemVO> mList = null;
     private boolean isPressBack = false;
     //--------------------------------------------------
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

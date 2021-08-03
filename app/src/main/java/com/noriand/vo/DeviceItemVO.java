@@ -18,6 +18,9 @@ public class DeviceItemVO {
 	public String isBatteryAlarm = "";
 	public int soundType = 0;
 
+	public String updateTime = "";
+	public boolean isExistDevice = false;
+
 	public DeviceItemVO() {
 	}
 
@@ -66,6 +69,18 @@ public class DeviceItemVO {
 		if(!jsonObject.isNull("soundType")) {
 			soundType = jsonObject.getInt("soundType");
 		}
+
+		if(!jsonObject.isNull("updateTime")) {
+			String temp = jsonObject.getString("updateTime");
+			if(temp != null && temp.length() > 10) {
+				updateTime = temp.substring(0, 10);
+			}
+		}
+
+		if(!jsonObject.isNull("isExistDevice")) {
+			String temp = jsonObject.getString("isExistDevice");
+			isExistDevice = "Y".equals(temp);
+		}
 	}
 
 	public JSONObject getJSONObject() throws JSONException {
@@ -82,6 +97,9 @@ public class DeviceItemVO {
 		jsonObject.put("ltid", ltid);
 		jsonObject.put("isBatteryAlarm", isBatteryAlarm);
 		jsonObject.put("soundType", soundType);
+
+		jsonObject.put("updateTime", updateTime);
+		jsonObject.put("isExistDevice", isExistDevice);
 		return jsonObject;
 	}
 }

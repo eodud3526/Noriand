@@ -230,7 +230,7 @@ public class ActionHistoryTraceActivity extends BaseActivity {
                 mpl.setTag(i); /* polyline Tag 번호 지정 */
                 mpl.setLineColor(Color.argb(128, 255, 51, 0)); /* polyline 색 지정 */
                 mpl.addPoint(mapPoint);
-                
+
                 mmv.addPolyline(mpl);
             }
         }

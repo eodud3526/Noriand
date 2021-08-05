@@ -70,12 +70,12 @@ public class DeviceItemVO {
 			soundType = jsonObject.getInt("soundType");
 		}
 
-		if(!jsonObject.isNull("updateTime")) {
-			String temp = jsonObject.getString("updateTime");
-			if(temp != null && temp.length() > 10) {
-				updateTime = temp.substring(0, 10);
-			}
-		}
+//		if(!jsonObject.isNull("updateTime")) {
+//			String temp = jsonObject.getString("updateTime");
+//			if(temp != null && temp.length() > 10) {
+//				updateTime = temp.substring(0, 10);
+//			}
+//		}
 
 		if(!jsonObject.isNull("isExistDevice")) {
 			String temp = jsonObject.getString("isExistDevice");
@@ -98,8 +98,10 @@ public class DeviceItemVO {
 		jsonObject.put("isBatteryAlarm", isBatteryAlarm);
 		jsonObject.put("soundType", soundType);
 
-		jsonObject.put("updateTime", updateTime);
+//		jsonObject.put("updateTime", updateTime);
 		jsonObject.put("isExistDevice", isExistDevice);
 		return jsonObject;
 	}
+
+	public String toString(){return "name = " + name;}
 }

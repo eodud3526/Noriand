@@ -36,7 +36,7 @@ public class ActionHistoryItemVO {
     }
 
     public String toString() {
-        return addDash(viewDate) + "                                                        " + String.format("%,d", Integer.parseInt(dist)) + "m";
+        return addDash(viewDate) + "                                                     " + String.format("%,d", Integer.parseInt(dist)) + "m";
     }
 
     public String addDash(String s){

@@ -45,9 +45,7 @@ import net.daum.mf.map.api.MapView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -435,9 +433,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+                String ltid = CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID);
                 RequestGetTraceArrayVO requestItem = new RequestGetTraceArrayVO();
                 requestItem.deviceNo = mItem.no;
                 requestItem.userNo = userNo;
+                requestItem.ltid = ltid;
                 networkGetTraceArray(requestItem);
             }
         });
@@ -641,6 +641,7 @@ public class MainActivity extends BaseActivity {
         }
 
         int size = mTraceList.size();
+
         if(size == 0) {
             return;
         }
@@ -704,7 +705,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 if(mmv != null && item.isConfirm) {
-                    String today = item.today;
+                    String today = item.today; // today = lora ct
                     mToday = today;
                     int batteryCount = item.batteryCount;
                     String xTemp = item.x;
@@ -728,34 +729,8 @@ public class MainActivity extends BaseActivity {
                             }
                         }
                     }
-                    // mtvToday.setText(today);
-                    // 현재시간 - interval
-                    if (is_first_tapped == false){ // 초기 상태
-                        mtvToday.setText(today);
-                        is_first_tapped = true;
-                    }
-                    else {
-                        Thread t = new Thread() {
-                            public void run() {
-                                try {
-                                    while (!isInterrupted()) {
-                                        Thread.sleep(1000 * 60 * refresh_interval);
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                long date = Calendar.getInstance().getTimeInMillis();
-                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                                mtvToday.setText(sdf.format(date));
-                                            }
-                                        });
-                                    }
-                                } catch (InterruptedException e) {
+                    mtvToday.setText(today);
 
-                                }
-                            }
-                        };
-                        t.start();
-                    }
                     if (mmv != null && !StringUtil.isEmpty(xTemp) && !StringUtil.isEmpty(yTemp)) {
                         mmv.removeAllPOIItems();
                         mmv.removeAllPolylines();

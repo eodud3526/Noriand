@@ -18,12 +18,9 @@ import com.noriand.common.CommonPreferences;
 import com.noriand.network.ApiController;
 import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.ActionHistoryItemVO;
-import com.noriand.vo.DeviceItemVO;
+import com.noriand.vo.TraceItemVO;
 import com.noriand.vo.request.RequestGetActionHistoryVO;
 import com.noriand.vo.response.ResponseGetActionHistoryArrayVO;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +30,7 @@ public class ActionHistoryActivity extends BaseActivity {
 
     private ListView mlv = null;
     ArrayAdapter<ActionHistoryItemVO> mAdapter;
-
+    private ArrayList<TraceItemVO> mTraceList = null;
 
     Button startDate, endDate = null;
     Button searchButton = null;
@@ -61,6 +58,7 @@ public class ActionHistoryActivity extends BaseActivity {
         searchButton = findViewById(R.id.searchButton);
         requestItem = new RequestGetActionHistoryVO();
         mrlPrev = (RelativeLayout)findViewById(R.id.rl_action_history_prev);
+        mTraceList = new ArrayList<TraceItemVO>();
     }
 
     public void setListener(){
@@ -129,6 +127,7 @@ public class ActionHistoryActivity extends BaseActivity {
                 clear();
             }
         });
+
     }
 
     private void clear() {
@@ -166,8 +165,8 @@ public class ActionHistoryActivity extends BaseActivity {
                 mlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        showDialogOneButton("기능 준비중입니다.");
-                       // moveActionHistoryTraceActivity();
+                        String date = mlv.getAdapter().getItem(position).toString().substring(0,10);
+                        moveActionHistoryTraceActivity(date);
                     }
                 });
             }
@@ -206,18 +205,9 @@ public class ActionHistoryActivity extends BaseActivity {
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
-    public void moveActionHistoryTraceActivity(DeviceItemVO item) {
-        String strItem = "";
-        try {
-            JSONObject jsonObject = item.getJSONObject();
-            if(jsonObject != null) {
-                strItem = jsonObject.toString();
-            }
-        } catch (JSONException e) {
-        }
-
-        Intent intent = new Intent(mActivity, DeviceWriteActivity.class);
-        intent.putExtra("strItem", strItem);
+    public void moveActionHistoryTraceActivity(String date) {
+        Intent intent = new Intent(mActivity, ActionHistoryTraceActivity.class);
+        intent.putExtra("date", date);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);

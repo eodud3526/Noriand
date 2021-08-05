@@ -10,6 +10,7 @@ public class TraceItemVO {
 	public String x = "";
 	public String y = "";
 	public String insertTime = "";
+	public String ltid = "";
 
 	public void parseJSONObject(JSONObject jsonObject) throws JSONException {
 		if(jsonObject == null) {
@@ -31,6 +32,9 @@ public class TraceItemVO {
 		if(!jsonObject.isNull("insertTime")) {
 			insertTime = jsonObject.getString("insertTime");
 		}
+		if(!jsonObject.isNull("ltid")) {
+			ltid = jsonObject.getString("ltid");
+		}
 	}
 
 	public JSONObject getJSONObject() throws JSONException {
@@ -40,6 +44,11 @@ public class TraceItemVO {
 		jsonObject.put("x", x);
 		jsonObject.put("y", y);
 		jsonObject.put("insertTime", insertTime);
+		jsonObject.put("ltid", ltid);
 		return jsonObject;
+	}
+
+	public String toString(){
+		return "insertTime = " + insertTime;
 	}
 }

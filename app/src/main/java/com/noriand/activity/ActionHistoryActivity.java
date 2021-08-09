@@ -82,9 +82,9 @@ public class ActionHistoryActivity extends BaseActivity {
                         fromDt = "" + year + getMonth(monthOfYear) + getDay(dayOfMonth);
                     }
                 }, year, monthOfYear, dayOfMonth);
-                c.add(Calendar.MONTH, -2);
+                c.add(Calendar.YEAR, -1);
                 dpd.getDatePicker().setMinDate(c.getTimeInMillis());
-                c.add(Calendar.MONTH, 1);
+                c.add(Calendar.YEAR, 1);
                 dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
                 dpd.show();
             }
@@ -104,9 +104,10 @@ public class ActionHistoryActivity extends BaseActivity {
                             toDt = "" + yearEnd + getMonth(monthOfYearEnd) + getDay(dayOfMonthEnd);
                         }
                     }, yearEnd, monthOfYearEnd, dayOfMonthEnd);
-                    dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
-                    c.add(Calendar.MONTH, -1);
+                    c.add(Calendar.YEAR, -1);
                     dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+                    c.add(Calendar.YEAR, 1);
+                    dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
                     dpd.show();
                 }
             }

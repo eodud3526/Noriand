@@ -199,7 +199,7 @@
                     android:textColor="#000"
                     android:textSize="16dp"
                     android:gravity="center_vertical"
-                    android:text="2분"/>
+                    android:text="5분"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rl_device_setting_refresh_interval_5"
@@ -220,7 +220,7 @@
                     android:textColor="#000"
                     android:textSize="16dp"
                     android:gravity="center_vertical"
-                    android:text="5분"/>
+                    android:text="10분"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rl_device_setting_refresh_interval_10"
@@ -241,7 +241,7 @@
                     android:textColor="#000"
                     android:textSize="16dp"
                     android:gravity="center_vertical"
-                    android:text="10분"/>
+                    android:text="1시간"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

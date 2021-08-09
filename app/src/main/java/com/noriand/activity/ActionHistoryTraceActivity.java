@@ -35,6 +35,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static net.daum.mf.map.n.api.internal.NativeMapLocationManager.setShowCurrentLocationMarker;
+
 public class ActionHistoryTraceActivity extends BaseActivity {
     private MapView mmv = null;
     private RelativeLayout mrlMap = null;
@@ -100,6 +102,7 @@ public class ActionHistoryTraceActivity extends BaseActivity {
         mMapViewEventListener = new MapView.MapViewEventListener() {
             @Override
             public void onMapViewInitialized(MapView mapView) {
+                setShowCurrentLocationMarker(false);
             }
 
             @Override
@@ -212,12 +215,14 @@ public class ActionHistoryTraceActivity extends BaseActivity {
             String name = item.insertTime;
             String x = item.x;
             String y = item.y;
+
             if(!StringUtil.isEmpty(x) && !StringUtil.isEmpty(y)) {
                 double dX = Double.parseDouble(x);
                 double dY = Double.parseDouble(y);
-                MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(dY, dX);
 
+                MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(dY, dX);
                 MapPOIItem marker = new MapPOIItem();
+
                 marker.setItemName(name);
                 marker.setTag(i);
                 marker.setMapPoint(mapPoint);
@@ -281,9 +286,6 @@ public class ActionHistoryTraceActivity extends BaseActivity {
                 for(int i=0; i<length; i++) {
                     if (traceArray[i].insertTime.substring(0,10).equals(date)){
                         mTraceList.add(traceArray[i]);
-                        System.out.println("xxxxxxxxxxxxxxxxxxx");
-                        System.out.println(traceArray[i]);
-                        System.out.println("yyyyyyyyyyyyyyyyyyy");
                     }
                 }
                 drawTraceArray();

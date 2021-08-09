@@ -4,12 +4,50 @@
     android:layout_height="match_parent"
     android:background="#fff">
 
-    <androidx.drawerlayout.widget.DrawerLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#6b37ff">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textSize="20dp"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="설정"
+            android:background="#6b37ff"/>
+        <RelativeLayout
+            android:id="@+id/rl_action_history_prev"
+            android:layout_width="60dp"
+            android:layout_height="60dp" >
+            <View
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/selector_btn_prev_white"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_device_write_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/selector_bgr_white_to_gray_corner">
+            <View
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:duplicateParentState="true"
+                android:background="@drawable/selector_btn_trash"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/dl_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp">
-
         <RelativeLayout
             android:id="@+id/rl_main_sub_menu"
             android:layout_width="match_parent"
@@ -23,12 +61,10 @@
                 android:scrollbarSize="2dp"
                 android:overScrollMode="never"
                 android:fadeScrollbars="false">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="120dp">
@@ -226,7 +262,6 @@
                             android:duplicateParentState="true"
                             android:background="@drawable/selector_btn_arrow_next_small"/>
                     </RelativeLayout>
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -260,8 +295,6 @@
                         android:background="#ccc" />
                 </LinearLayout>
             </com.noriand.view.scrollview.CustomScrollView>
-
         </RelativeLayout>
-    </androidx.drawerlayout.widget.DrawerLayout>
-
+    </RelativeLayout>
 </RelativeLayout>

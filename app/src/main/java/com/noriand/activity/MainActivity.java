@@ -14,6 +14,16 @@ import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.message.template.SocialObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.helper.log.Logger;
 import com.noriand.R;
 import com.noriand.common.CommonPreferences;
 import com.noriand.constant.ServerConstant;
@@ -45,7 +55,11 @@ import net.daum.mf.map.api.MapView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -108,8 +122,6 @@ public class MainActivity extends BaseActivity {
     private ArrayList<TraceItemVO> mTraceList = null;
     private String mToday = "";
 
-    private int refresh_interval = 0;
-    private boolean is_first_tapped = false;
     // --------------------------------------------------
 
     @Override
@@ -122,13 +134,12 @@ public class MainActivity extends BaseActivity {
         setBase();
         setLayout();
         setListener();
-        //getHashKey(); 해시 키 찾는 함수 호출 메인화면 진입시 Run 창에서 확인가능
     }
 
     private void setBase() {
         mItem = new DeviceItemVO();
         mTraceList = new ArrayList<TraceItemVO>();
-        is_first_tapped = false;
+
     }
 
     private void setLayout() {
@@ -379,7 +390,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mdl.closeDrawers();
-                showDialogOneButton("기능 준비중입니다.");
+                kakaolink();
+                //showDialogOneButton("기능 준비중입니다.");
             }
         });
         mrlAlarm.setOnClickListener(new View.OnClickListener() {
@@ -478,7 +490,6 @@ public class MainActivity extends BaseActivity {
         } else {
             drawMarker();
         }
-        refresh_interval = mItem.refreshInterval;
     }
 
     private void drawMarker() {
@@ -581,7 +592,6 @@ public class MainActivity extends BaseActivity {
         if(userNo == 0 || mItem == null || mItem.no == 0) {
             return;
         }
-        refresh_interval = mItem.refreshInterval;
         RequestGetNowLocationVO requestItem = new RequestGetNowLocationVO();
         requestItem.isSilent = false;
         requestItem.userNo = userNo;
@@ -687,15 +697,17 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseGetNowLocationVO item) {
                 if(!"Y".equals(item.isLora)) {
-                    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
-                        @Override
-                        public void onConfirm() {
-                            moveDeviceUpdateActivity(mItem);
-                        }
-                        @Override
-                        public void onCancel() {
-                        }
-                    });
+                //    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
+                //        @Override
+                //        public void onConfirm() {
+                //            moveDeviceUpdateActivity(mItem);
+                //        }
+                //        @Override
+                //        public void onCancel() {
+                //        }
+                //    });
+                    showDialogOneButton("현재 기기 전원이 꺼져 있습니다.");
+                    mtvToday.setText("마지막으로 통신한 시간 : " + item.today); // 수정 필요
                     return;
                 }
 
@@ -846,8 +858,13 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar c = Calendar.getInstance();
+                String date = sdf.format(c.getTime());
                 for(int i=0; i<length; i++) {
-                    mTraceList.add(traceArray[i]);
+                    if (traceArray[i].insertTime.substring(0,10).equals(date)){
+                        mTraceList.add(traceArray[i]);
+                    }
                 }
                 drawTraceArray();
             }
@@ -1005,29 +1022,96 @@ public class MainActivity extends BaseActivity {
         mmv.removeAllPOIItems();
         mrlMap.addView(mmv);
     }
-    /* // 해시 키 찾는 함수
-    private void getHashKey(){
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (packageInfo == null)
-            Log.e("KeyHash", "KeyHash:null");
 
-        for (Signature signature : packageInfo.signatures) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            } catch (NoSuchAlgorithmException e) {
-                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
+    public void kakaolink() {
+
+        /*
+        // 지도 , 이미지 , 단순 링크
+          참고 주소 :
+          1)
+          https://thisisspear.tistory.com/52
+          2)
+          https://developers.kakao.com/docs/latest/ko/message/message-template#social
+         */
+
+        String title ="타이틀";
+        String descrption = "카카오 지도 메세지 템플릿.";
+
+
+
+        // 5개의 속성 중 최대 3개까지만 표시해 줍니다. 우선 순위는 Like > Comment > Shared > View > Subscriber 순서입니다.
+        int like_count = 10;
+        int comment_count = 20;
+        int share_count = 30;
+        int view_count = 40;
+        int sub_count = 50;
+
+
+        // 검색할 주소
+        String address = "인천시 계양구 계산로 171";
+
+        // 이미지가 없으면  비어서 보여진다. null은 안됨
+        String imageUrl = "http://mud-kage.kakao.co.kr/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png";
+
+        LocationTemplate params = LocationTemplate.newBuilder(
+                address, // 보여줄 주소
+
+                // Builder newBuilder(final String title, final String imageUrl, final LinkObject link)
+                ContentObject.newBuilder(title,imageUrl,
+                        // ListTemplate
+                        LinkObject.newBuilder() // 링크 오브젝트
+                                .setWebUrl("https://developers.kakao.com")
+                                .setMobileWebUrl("https://developers.kakao.com")
+                                .build())
+                        .setDescrption(descrption)
+                        .build())
+
+                //위치 보기시 하단에 나타나는 타이틀
+                .setAddressTitle("주소 타이틀")
+
+                // 소셜 카운트
+                .setSocial(SocialObject.newBuilder() // 소셜 오브젝트
+                        .setLikeCount(like_count)
+                        .setCommentCount(comment_count)
+                        .setSharedCount(share_count)
+                        .setViewCount(view_count)
+                        .setSubscriberCount(sub_count)
+                        .build())
+
+                // 버튼 1
+                .addButton(new ButtonObject("자세히 보기", LinkObject.newBuilder()
+                        .setWebUrl("'https://developers.kakao.com")
+                        .setMobileWebUrl("'https://developers.kakao.com")
+                        .setAndroidExecutionParams("key1=value1") // JSON -> P-> DID 주소 뒤에 담김.
+                        .setIosExecutionParams("key1=value1")
+                        .build())
+
+                ).build();
+
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
             }
-        }
-    }
 
-     */
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+
+         /*       mLog(TAG, "result.getTemplateId();"+result.getTemplateId());
+                mLog(TAG, "result.getTemplateArgs();"+result.getTemplateArgs().toString());*/
+            }
+        });
+
+
+    }
 
 
 }

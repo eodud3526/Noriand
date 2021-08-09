@@ -359,8 +359,8 @@ public class DeviceSelectActivity extends BaseActivity {
                     CommonPreferences.putInt(mActivity, CommonPreferences.TAG_DEVICE_NO, item.no);
                     CommonPreferences.putString(mActivity, CommonPreferences.TAG_DEVICE_LTID, item.ltid);
                     DeviceItemVO item = mList.get(nowPosition);
-                    //moveMainSettingActivity(item);
-                    moveDeviceSettingActivity(item);
+                    moveMainSettingActivity(item);
+                    //moveDeviceSettingActivity(item);
                 }
             });
             return convertView;
@@ -476,19 +476,20 @@ public class DeviceSelectActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseGetNowLocationVO item) {
                 if(!"Y".equals(item.isLora)) {
-                    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
-                        @Override
-                        public void onConfirm() {
-                            DeviceItemVO deviceItem = new DeviceItemVO();
-                            deviceItem.no = requestItem.deviceNo;
-                            deviceItem.name = requestItem.name;
-                            deviceItem.ltid = requestItem.ltid;
-                            moveDeviceUpdateActivity(deviceItem);
-                        }
-                        @Override
-                        public void onCancel() {
-                        }
-                    });
+                //    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
+                //        @Override
+                //        public void onConfirm() {
+                //            DeviceItemVO deviceItem = new DeviceItemVO();
+                //            deviceItem.no = requestItem.deviceNo;
+                //            deviceItem.name = requestItem.name;
+                //            deviceItem.ltid = requestItem.ltid;
+                //            moveDeviceUpdateActivity(deviceItem);
+                //        }
+                //        @Override
+                //        public void onCancel() {
+                //        }
+                //    });
+                    showDialogOneButton("현재 기기 전원이 꺼져 있습니다.");
                     return;
                 }
 

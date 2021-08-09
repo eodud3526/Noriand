@@ -5,12 +5,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import androidx.drawerlayout.widget.DrawerLayout;
+import android.widget.TextView;
 
 import com.noriand.R;
+import com.noriand.common.CommonPreferences;
+import com.noriand.network.ApiController;
+import com.noriand.util.StringUtil;
+import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.DeviceItemVO;
+import com.noriand.vo.request.RequestDeleteDeviceVO;
+import com.noriand.vo.response.ResponseVO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +25,9 @@ public class MainSettingActivity extends BaseActivity{
     private final int REQUEST_CODE_ALARM = 212;
     private final int REQUEST_CODE_SAFE_ZONE = 213;
     private final int REQUEST_CODE_DEVICE_UPDATE = 214;
+
+    private TextView mtvSubName = null;
+    private ImageView mivSub = null;
 
     private RelativeLayout mrlSubDeviceNumber = null;
     private RelativeLayout mrlShareFriend = null;
@@ -29,13 +38,15 @@ public class MainSettingActivity extends BaseActivity{
     private RelativeLayout mrlActionHistory = null;
 
     private RelativeLayout mrlSubPencil = null;
+    private RelativeLayout mrlPrev = null;
+    private RelativeLayout mrlDelete = null;
 
     private DeviceItemVO mItem = null;
 
+    private int mDeviceNo = 0;
 
-    private DrawerLayout mdl = null;
+
     private RelativeLayout mrlSubMenuArea = null;
-    private DrawerLayout.DrawerListener mDrawerListener = null;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +54,30 @@ public class MainSettingActivity extends BaseActivity{
         setContentView(R.layout.activity_main_setting);
         setStatusBar(Color.WHITE);
 
+        setBase();
         setLayout();
         setListener();
     }
 
+    private void setBase() {
+        mItem = new DeviceItemVO();
+        Intent intent = getIntent();
+        String strItem = intent.getStringExtra("strItem");
+        if(!StringUtil.isEmpty(strItem)) {
+            try {
+                JSONObject jsonObject = new JSONObject(strItem);
+                mItem.parseJSONObject(jsonObject);
+            } catch(JSONException e) {
+            }
+        }
+        mDeviceNo = mItem.no;
+    }
+
     public void setLayout(){
-        mdl = (DrawerLayout)findViewById(R.id.dl_main);
+        mtvSubName = (TextView)findViewById(R.id.tv_main_submenu_name);
+        mivSub = (ImageView)findViewById(R.id.iv_main_submenu_picture);
+        mrlDelete = (RelativeLayout)findViewById(R.id.rl_device_write_delete);
+
         mrlSubPencil = (RelativeLayout)findViewById(R.id.rl_main_submenu_pencil);
         mrlSubMenuArea = (RelativeLayout)findViewById(R.id.rl_main_sub_menu);
         mrlSubDeviceNumber = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_device_number);
@@ -58,29 +87,18 @@ public class MainSettingActivity extends BaseActivity{
         mrlVoucher = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_voucher);
         mrlSafeZone = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_safe_zone);
         mrlActionHistory = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_action_history);
+
+        mrlPrev = (RelativeLayout)findViewById(R.id.rl_action_history_prev);
+
     }
 
     public void setListener() {
-        mDrawerListener = new DrawerLayout.DrawerListener() {
+        mrlPrev.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDrawerStateChanged(int arg0) {
+            public void onClick(View v) {
+                moveDeviceSelectActivity();
             }
-
-            @Override
-            public void onDrawerSlide(View v, float x) {
-                mdl.bringChildToFront(v);
-                mdl.requestLayout();
-            }
-
-            @Override
-            public void onDrawerOpened(View arg0) {
-            }
-
-            @Override
-            public void onDrawerClosed(View arg0) {
-            }
-        };
-        mdl.addDrawerListener(mDrawerListener);
+        });
         mrlSubPencil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,28 +108,25 @@ public class MainSettingActivity extends BaseActivity{
         mrlSubDeviceNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
                 moveDeviceNumberActivity(mItem);
             }
         });
         mrlShareFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
+
                 showDialogOneButton("기능 준비중입니다.");
             }
         });
         mrlAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
                 moveAlarmActivity();
             }
         });
         mrlDeviceSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
                 moveDeviceSettingActivity(mItem);
             }
         });
@@ -124,26 +139,44 @@ public class MainSettingActivity extends BaseActivity{
         mrlSafeZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
                 moveSafeZoneListActivity();
             }
         });
         mrlActionHistory.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                mdl.closeDrawers();
                 moveActionHistoryActivity();
             }
         });
+        mrlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogTwoButton("기기를 삭제하시겠습니까?", new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+                        RequestDeleteDeviceVO requestItem = new RequestDeleteDeviceVO();
+                        requestItem.deviceNo = mDeviceNo;
+                        requestItem.userNo = userNo;
+                        networkDeleteDevice(requestItem);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
+
+        mtvSubName.setText(mItem.name);
+
+        String pictureUrl = mItem.pictureUrl;
+        if(!StringUtil.isEmpty(pictureUrl)) {
+            setImage(mActivity, mivSub, pictureUrl, null);
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            if(mdl.isDrawerOpen(mrlSubMenuArea)) {
-                mdl.closeDrawers();
-                return false;
-            }
-
             moveDeviceSelectActivity();
             return false;
         }
@@ -230,4 +263,56 @@ public class MainSettingActivity extends BaseActivity{
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
+    private void networkDeleteDevice(final RequestDeleteDeviceVO requestItem) {
+        mApiController.deleteDevice(mActivity, requestItem, new ApiController.ApiCommonListener() {
+            @Override
+            public void onSuccess(ResponseVO item) {
+                if(item == null) {
+                    showDialogOneButton(getResources().getString(R.string.please_retry_network));
+                    return;
+                }
+
+                if(!item.isConfirm) {
+                    showDialogOneButton("통신에 실패했습니다. 기기 정보를 확인 후, 다시 시도해 주세요.", new CommonDialog.DialogConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                        }
+                        @Override
+                        public void onCancel() {
+                        }
+                    });
+                    return;
+                }
+
+                String message = "기기가 삭제되었습니다.";
+                showDialogOneButton(message, new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        Intent intent = getIntent();
+                        intent.putExtra("isDelete", "Y");
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+            @Override
+            public void onFail() {
+                showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        networkDeleteDevice(requestItem);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
+    }
+
 }

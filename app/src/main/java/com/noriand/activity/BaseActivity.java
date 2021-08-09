@@ -67,6 +67,7 @@ public class BaseActivity extends Activity {
 			Window window = getWindow();
 			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 			window.setStatusBarColor(color);
 			if(sdkVersion >= Build.VERSION_CODES.M) {
 				if(color == Color.WHITE) {

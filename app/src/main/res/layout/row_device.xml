@@ -54,8 +54,15 @@
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
                                     android:layout_marginTop="7dp"
-                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginLeft="25dp"
                                     android:background="@drawable/selector_btn_safe_zone"/>
+                                <View
+                                    android:id="@+id/v_row_device_on"
+                                    android:layout_width="25dp"
+                                    android:layout_height="18dp"
+                                    android:layout_marginTop="7dp"
+                                    android:layout_marginLeft="0dp"
+                                    android:background="@drawable/ico_is_device_on"/>
                         </RelativeLayout>
                         <View
                             android:layout_width="match_parent"

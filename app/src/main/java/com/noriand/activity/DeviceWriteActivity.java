@@ -124,12 +124,13 @@ public class DeviceWriteActivity extends BaseActivity {
             public void onClick(View v) {
 
                 String name = metName.getText().toString();
-                if(StringUtil.isEmpty(name)) {
+                if (StringUtil.isEmpty(name)) {
                     showDialogOneButton("이름을 입력해 주세요.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
                             StringUtil.selectionLast(metName);
                         }
+
                         @Override
                         public void onCancel() {
                         }
@@ -138,25 +139,33 @@ public class DeviceWriteActivity extends BaseActivity {
                 }
 
                 String ltid = metLtid.getText().toString();
-                if(StringUtil.isEmpty(ltid)) {
+                if (StringUtil.isEmpty(ltid)) {
                     showDialogOneButton("기기 고유번호를 입력해 주세요.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
                             StringUtil.selectionLast(metLtid);
                         }
+
                         @Override
                         public void onCancel() {
                         }
                     });
                     return;
                 }
-
+                if (CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID).equals(ltid)){
+                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.");
+                    return;
+                }
+                if (!StringUtil.isValidString(ltid) | ltid.length() != 24) {
+                    showDialogOneButton("잘못된 고유번호 입니다.");
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                    return;
+                }
                 int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
                 RequestWriteDeviceVO requestItem = new RequestWriteDeviceVO();
-                if(isEditMode) {
+                if (isEditMode) {
                     requestItem.changeUpdateMode();
                 }
-
                 requestItem.userNo = userNo;
                 requestItem.deviceNo = mDeviceNo;
                 requestItem.name = name;
@@ -197,13 +206,28 @@ public class DeviceWriteActivity extends BaseActivity {
                     showDialogOneButton(getResources().getString(R.string.please_retry_network));
                     return;
                 }
-                if(item.isExistDevice){
-                    CommonPreferences.resetPreferences(getApplicationContext());
-                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 있습니다.", new CommonDialog.DialogConfirmListener() {
+                if(requestItem.ltid.equals(CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID))){
+                    //CommonPreferences.resetPreferences(getApplicationContext());
+                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
                             StringUtil.selectionLast(metLtid);
                         }
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+                    return;
+                }
+                System.out.println(requestItem.ltid);
+                if(!requestItem.ltid.substring(0,23).equals("0000090870b3d5676000e8")) {
+                    showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            StringUtil.selectionLast(metLtid);
+                        }
+
                         @Override
                         public void onCancel() {
 

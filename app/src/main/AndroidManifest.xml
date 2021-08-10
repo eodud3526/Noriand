@@ -30,7 +30,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/kakao_scheme"
+                <data
+                    android:scheme="@string/kakao_scheme"
                     android:host="@string/kakaolink_host"/>
             </intent-filter>
         </activity>
@@ -111,7 +112,9 @@
         </service>
 
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="022464c0ec3699f33660bd7862bbe810" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

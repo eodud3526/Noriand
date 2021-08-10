@@ -63,6 +63,7 @@ public class DeviceSelectActivity extends BaseActivity {
     // Data
     private ArrayList<DeviceItemVO> mList = null;
     private boolean isPressBack = false;
+    private boolean isDeviceOn = true;
     //--------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +299,7 @@ public class DeviceSelectActivity extends BaseActivity {
                 holder.rlStar = (RelativeLayout)convertView.findViewById(R.id.rl_row_device_star);
                 holder.rlPeople = (RelativeLayout)convertView.findViewById(R.id.rl_row_device_people);
                 holder.rlSetting = (RelativeLayout) convertView.findViewById(R.id.rl_row_device_setting);
+                holder.vDeviceOn = (View)convertView.findViewById(R.id.v_row_device_on);
 
                 convertView.setTag(holder);
             }
@@ -312,14 +314,22 @@ public class DeviceSelectActivity extends BaseActivity {
             holder.tvName.setText(item.name);
 
             int batteryCount = item.batteryCount;
-            if(batteryCount > 200) {
+            if (batteryCount == 0) {
+                holder.vBattery.setBackgroundResource(R.drawable.ico_battery_00);
+                isDeviceOn = false;
+                holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_off);
+            } else if(batteryCount > 200) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_04);
+                holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 150) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_03);
+                holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 100) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_02);
+                holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 50) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_01);
+                holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             }
 
             int refreshInterval = item.refreshInterval;
@@ -378,6 +388,7 @@ public class DeviceSelectActivity extends BaseActivity {
         private RelativeLayout rlStar = null;
         private RelativeLayout rlPeople = null;
         private RelativeLayout rlSetting = null;
+        private View vDeviceOn = null;
     }
 
     public void moveMainActivity(DeviceItemVO item) {
@@ -476,20 +487,20 @@ public class DeviceSelectActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseGetNowLocationVO item) {
                 if(!"Y".equals(item.isLora)) {
-                //    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
-                //        @Override
-                //        public void onConfirm() {
-                //            DeviceItemVO deviceItem = new DeviceItemVO();
-                //            deviceItem.no = requestItem.deviceNo;
-                //            deviceItem.name = requestItem.name;
-                //            deviceItem.ltid = requestItem.ltid;
-                //            moveDeviceUpdateActivity(deviceItem);
-                //        }
-                //        @Override
-                //        public void onCancel() {
-                //        }
-                //    });
-                    showDialogOneButton("현재 기기 전원이 꺼져 있습니다.");
+                    showDialogTwoButton("이 기기로 위치 조회가 실패했습니다. 올바른 기기 고유번호인지 확인해 주세요. 장치 정보로 이동하시겠습니까?", new CommonDialog.DialogConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            DeviceItemVO deviceItem = new DeviceItemVO();
+                            deviceItem.no = requestItem.deviceNo;
+                            deviceItem.name = requestItem.name;
+                            deviceItem.ltid = requestItem.ltid;
+                            moveDeviceUpdateActivity(deviceItem);
+                        }
+                        @Override
+                        public void onCancel() {
+                        }
+                    });
+                    //showDialogOneButton("현재 기기 전원이 꺼져 있습니다.");
                     return;
                 }
 
@@ -531,4 +542,5 @@ public class DeviceSelectActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CODE_DEVICE_WRITE);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
 }

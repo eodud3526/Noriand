@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<TraceItemVO> mTraceList = null;
     private String mToday = "";
+    private String mLastTime = "";
 
     // --------------------------------------------------
 
@@ -150,6 +151,7 @@ public class MainActivity extends BaseActivity {
         try {
             mmv = new MapView(mActivity);
             mrlMap.addView(mmv);
+
         } catch(UnsatisfiedLinkError e) {
             mrlMap.postDelayed(new Runnable() {
                 @Override
@@ -707,7 +709,13 @@ public class MainActivity extends BaseActivity {
                 //        }
                 //    });
                     showDialogOneButton("현재 기기 전원이 꺼져 있습니다.");
-                    mtvToday.setText("마지막으로 통신한 시간 : " + item.today); // 수정 필요
+                    int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+                    String ltid = CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID);
+                    RequestGetTraceArrayVO requestItem = new RequestGetTraceArrayVO();
+                    requestItem.deviceNo = mItem.no;
+                    requestItem.userNo = userNo;
+                    requestItem.ltid = ltid;
+                    networkGetLastMarker(requestItem);
                     return;
                 }
 
@@ -1098,11 +1106,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFailure(ErrorResult errorResult) {
                 Logger.e(errorResult.toString());
+
             }
 
             @Override
             public void onSuccess(KakaoLinkResponse result) {
-                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyy");
+                System.out.println(result.getTemplateMsg());
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
 
          /*       mLog(TAG, "result.getTemplateId();"+result.getTemplateId());
@@ -1113,5 +1123,67 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private void networkGetLastMarker(final RequestGetTraceArrayVO requestItem) {
+        mApiController.getTraceArray(mActivity, requestItem, new ApiController.ApiGetTraceArrayListener() {
+            @Override
+            public void onSuccess(ResponseGetTraceArrayVO item) {
+                if(item == null) {
+                    showDialogOneButton(getResources().getString(R.string.please_retry_network));
+                    return;
+                }
+
+                if(!item.isConfirm) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+
+                TraceItemVO[] traceArray = item.traceArray;
+                if(item.traceArray == null) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+
+                int length = traceArray.length;
+                if(length == 0) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+                TraceItemVO lastItem = traceArray[0];
+                mLastTime = lastItem.insertTime;
+                mtvToday.setText("마지막으로 통신한 시간 : " + mLastTime);
+                String strLastX = lastItem.x;
+                String strLastY = lastItem.y;
+                if (!StringUtil.isEmpty(strLastX) && !StringUtil.isEmpty(strLastY)) {
+                    double lastX = Double.parseDouble(strLastX);
+                    double lastY = Double.parseDouble(strLastY);
+                    if (mmv != null && lastX > 0 && lastY > 0) {
+                        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(lastY, lastX);
+                        mmv.setMapCenterPoint(mapPoint, true);
+                        MapPOIItem marker = new MapPOIItem();
+                        marker.setItemName(mLastTime);
+                        marker.setMapPoint(mapPoint);
+                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                        marker.setCustomImageResourceId(R.drawable.ico_pin_red_01); // 마커 이미지.
+                        marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                        marker.setCustomImageAnchor(0.5f, 0.5f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                        mmv.addPOIItem(marker);
+                    }
+                }
+
+            }
+            @Override
+            public void onFail() {
+                showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        networkGetLastMarker(requestItem);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
+    }
 
 }

@@ -2,6 +2,8 @@ package com.noriand.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,7 +22,6 @@ import com.kakao.message.template.ButtonObject;
 import com.kakao.message.template.ContentObject;
 import com.kakao.message.template.LinkObject;
 import com.kakao.message.template.LocationTemplate;
-import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
@@ -55,13 +56,16 @@ import net.daum.mf.map.api.MapView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class MainActivity extends BaseActivity {
 // --------------------------------------------------
@@ -135,6 +139,7 @@ public class MainActivity extends BaseActivity {
         setBase();
         setLayout();
         setListener();
+
     }
 
     private void setBase() {
@@ -891,9 +896,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
-
-
     public void moveDeviceSettingActivity(DeviceItemVO item) {
         String strItem = "";
         try {
@@ -1032,91 +1034,67 @@ public class MainActivity extends BaseActivity {
     }
 
     public void kakaolink() {
-
-        /*
-        // 지도 , 이미지 , 단순 링크
-          참고 주소 :
-          1)
-          https://thisisspear.tistory.com/52
-          2)
-          https://developers.kakao.com/docs/latest/ko/message/message-template#social
-         */
-
-        String title ="타이틀";
-        String descrption = "카카오 지도 메세지 템플릿.";
-
-
-
-        // 5개의 속성 중 최대 3개까지만 표시해 줍니다. 우선 순위는 Like > Comment > Shared > View > Subscriber 순서입니다.
-        int like_count = 10;
-        int comment_count = 20;
-        int share_count = 30;
-        int view_count = 40;
-        int sub_count = 50;
-
-
+        String title = mItem.name;
+        String descrption = "위치 표시";
         // 검색할 주소
-        String address = "인천시 계양구 계산로 171";
+        TraceItemVO item = mTraceList.get(0);
+        List<Address> list = null;
+        String strLastX = item.x;
+        String strLastY = item.y;
+        if (!StringUtil.isEmpty(strLastX) && !StringUtil.isEmpty(strLastY)){
+            double lastX = Double.parseDouble(strLastX);
+            double lastY = Double.parseDouble(strLastY);
+            final Geocoder geocoder = new Geocoder(this);
 
+            if (lastX > 0 && lastY > 0){
+                try {
+                    list = geocoder.getFromLocation(lastY,lastX,1);
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        String address = list.get(0).getAddressLine(0);
+        System.out.println(list.get(0).toString());
         // 이미지가 없으면  비어서 보여진다. null은 안됨
-        String imageUrl = "http://mud-kage.kakao.co.kr/dn/bSbH9w/btqgegaEDfW/vD9KKV0hEintg6bZT4v4WK/kakaolink40_original.png";
-
+        String imageUrl = "https://ifh.cc/g/n8ymoW.jpg"; // 기기 이미지
+        //String imageUrl = "https://ifh.cc/g/DyxiDr.png"; // 노리앤드 아이콘 이미지
+        // 링크 화면에 보여줄 이미지 url, 이미지 링크 만료일 : 2022-04-18
         LocationTemplate params = LocationTemplate.newBuilder(
                 address, // 보여줄 주소
-
-                // Builder newBuilder(final String title, final String imageUrl, final LinkObject link)
                 ContentObject.newBuilder(title,imageUrl,
                         // ListTemplate
                         LinkObject.newBuilder() // 링크 오브젝트
-                                .setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com")
+                                //.setWebUrl("https://developers.kakao.com")
+                                //.setMobileWebUrl("https://developers.kakao.com")
                                 .build())
                         .setDescrption(descrption)
                         .build())
-
                 //위치 보기시 하단에 나타나는 타이틀
-                .setAddressTitle("주소 타이틀")
-
-                // 소셜 카운트
-                .setSocial(SocialObject.newBuilder() // 소셜 오브젝트
-                        .setLikeCount(like_count)
-                        .setCommentCount(comment_count)
-                        .setSharedCount(share_count)
-                        .setViewCount(view_count)
-                        .setSubscriberCount(sub_count)
-                        .build())
-
+                .setAddressTitle("주소")
                 // 버튼 1
-                .addButton(new ButtonObject("자세히 보기", LinkObject.newBuilder()
-                        .setWebUrl("'https://developers.kakao.com")
-                        .setMobileWebUrl("'https://developers.kakao.com")
+                .addButton(new ButtonObject("앱 설치 링크", LinkObject.newBuilder()
+                        //.setWebUrl("'https://developers.kakao.com")
+                        //.setMobileWebUrl("'https://developers.kakao.com")
+                        // 앱 설치x -> 오픈마켓 링크, 앱 설치o -> 앱 실행
                         .setAndroidExecutionParams("key1=value1") // JSON -> P-> DID 주소 뒤에 담김.
                         .setIosExecutionParams("key1=value1")
                         .build())
-
                 ).build();
-
-
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
         serverCallbackArgs.put("product_id", "${shared_product_id}");
 
         KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-
             @Override
             public void onFailure(ErrorResult errorResult) {
                 Logger.e(errorResult.toString());
 
             }
-
             @Override
             public void onSuccess(KakaoLinkResponse result) {
-                System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyy");
                 System.out.println(result.getTemplateMsg());
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-
-         /*       mLog(TAG, "result.getTemplateId();"+result.getTemplateId());
-                mLog(TAG, "result.getTemplateArgs();"+result.getTemplateArgs().toString());*/
             }
         });
 
@@ -1149,6 +1127,7 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 TraceItemVO lastItem = traceArray[0];
+                mTraceList.add(lastItem);
                 mLastTime = lastItem.insertTime;
                 mtvToday.setText("마지막으로 통신한 시간 : " + mLastTime);
                 String strLastX = lastItem.x;
@@ -1167,6 +1146,7 @@ public class MainActivity extends BaseActivity {
                         marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                         marker.setCustomImageAnchor(0.5f, 0.5f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
                         mmv.addPOIItem(marker);
+                        System.out.println(strLastX + "    " + strLastY);
                     }
                 }
 

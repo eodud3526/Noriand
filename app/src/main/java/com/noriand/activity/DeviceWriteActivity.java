@@ -156,9 +156,8 @@ public class DeviceWriteActivity extends BaseActivity {
                     showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.");
                     return;
                 }
-                if (!StringUtil.isValidString(ltid) | ltid.length() != 24) {
+                if (!StringUtil.isValidString(ltid) | ltid.length() != 24 | !ltid.substring(0,23).equals("0000090870b3d5676000e8")) {
                     showDialogOneButton("잘못된 고유번호 입니다.");
-                    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                     return;
                 }
                 int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
@@ -220,14 +219,13 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
-                System.out.println(requestItem.ltid);
-                if(!requestItem.ltid.substring(0,23).equals("0000090870b3d5676000e8")) {
+                if(!requestItem.ltid.substring(0,23).equals("0000090870b3d5676000e8") | !StringUtil.isValidString(requestItem.ltid)
+                        | requestItem.ltid.length() != 24) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
                             StringUtil.selectionLast(metLtid);
                         }
-
                         @Override
                         public void onCancel() {
 

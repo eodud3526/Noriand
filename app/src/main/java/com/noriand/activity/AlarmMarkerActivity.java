@@ -303,6 +303,7 @@ public class AlarmMarkerActivity extends BaseActivity{
                         mSafeZoneList.add(safeZoneItem);
                     }
                 }
+                drawAlarmMarker();
             }
             @Override
             public void onFail() {
@@ -317,7 +318,6 @@ public class AlarmMarkerActivity extends BaseActivity{
                 });
             }
         });
-        drawAlarmMarker();
     }
 
 }

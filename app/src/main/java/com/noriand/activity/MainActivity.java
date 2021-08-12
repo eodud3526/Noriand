@@ -2,8 +2,6 @@ package com.noriand.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -56,12 +54,10 @@ import net.daum.mf.map.api.MapView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -399,6 +395,7 @@ public class MainActivity extends BaseActivity {
                 mdl.closeDrawers();
                 kakaolink();
                 //showDialogOneButton("기능 준비중입니다.");
+                //ShareScreenShot();
             }
         });
         mrlAlarm.setOnClickListener(new View.OnClickListener() {
@@ -457,7 +454,7 @@ public class MainActivity extends BaseActivity {
                 requestItem.deviceNo = mItem.no;
                 requestItem.userNo = userNo;
                 requestItem.ltid = ltid;
-                networkGetTraceArray(requestItem);
+                networkGetTodayTraceArray(requestItem);
             }
         });
         mrlCctv.setOnClickListener(new View.OnClickListener() {
@@ -845,7 +842,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void networkGetTraceArray(final RequestGetTraceArrayVO requestItem) {
+    private void networkGetTodayTraceArray(final RequestGetTraceArrayVO requestItem) {
         mApiController.getTraceArray(mActivity, requestItem, new ApiController.ApiGetTraceArrayListener() {
             @Override
             public void onSuccess(ResponseGetTraceArrayVO item) {
@@ -886,7 +883,7 @@ public class MainActivity extends BaseActivity {
                 showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        networkGetTraceArray(requestItem);
+                        networkGetTodayTraceArray(requestItem);
                     }
                     @Override
                     public void onCancel() {
@@ -1036,30 +1033,16 @@ public class MainActivity extends BaseActivity {
     public void kakaolink() {
         String title = mItem.name;
         String descrption = "위치 표시";
+
         // 검색할 주소
         TraceItemVO item = mTraceList.get(0);
-        List<Address> list = null;
-        String strLastX = item.x;
-        String strLastY = item.y;
-        if (!StringUtil.isEmpty(strLastX) && !StringUtil.isEmpty(strLastY)){
-            double lastX = Double.parseDouble(strLastX);
-            double lastY = Double.parseDouble(strLastY);
-            final Geocoder geocoder = new Geocoder(this);
+        String address = item.y + ", " + item.x;
 
-            if (lastX > 0 && lastY > 0){
-                try {
-                    list = geocoder.getFromLocation(lastY,lastX,1);
-                } catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        String address = list.get(0).getAddressLine(0);
-        System.out.println(list.get(0).toString());
         // 이미지가 없으면  비어서 보여진다. null은 안됨
         String imageUrl = "https://ifh.cc/g/n8ymoW.jpg"; // 기기 이미지
-        //String imageUrl = "https://ifh.cc/g/DyxiDr.png"; // 노리앤드 아이콘 이미지
+        //String imageUrl = "https://ifh.cc/g/DyxiDr.png"; // 아이콘 이미지
         // 링크 화면에 보여줄 이미지 url, 이미지 링크 만료일 : 2022-04-18
+
         LocationTemplate params = LocationTemplate.newBuilder(
                 address, // 보여줄 주소
                 ContentObject.newBuilder(title,imageUrl,
@@ -1089,7 +1072,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFailure(ErrorResult errorResult) {
                 Logger.e(errorResult.toString());
-
             }
             @Override
             public void onSuccess(KakaoLinkResponse result) {
@@ -1097,8 +1079,6 @@ public class MainActivity extends BaseActivity {
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
             }
         });
-
-
     }
 
     private void networkGetLastMarker(final RequestGetTraceArrayVO requestItem) {
@@ -1146,7 +1126,6 @@ public class MainActivity extends BaseActivity {
                         marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                         marker.setCustomImageAnchor(0.5f, 0.5f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
                         mmv.addPOIItem(marker);
-                        System.out.println(strLastX + "    " + strLastY);
                     }
                 }
 
@@ -1165,5 +1144,4 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
 }

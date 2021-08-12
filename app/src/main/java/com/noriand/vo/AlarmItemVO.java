@@ -62,4 +62,6 @@ public class AlarmItemVO {
 		jsonObject.put("insertTime", insertTime);
 		return jsonObject;
 	}
+
+	public String toString() {return "deviceNo = " + deviceNo + " insertTime = " + insertTime;}
 }

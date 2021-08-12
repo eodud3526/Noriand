@@ -54,6 +54,7 @@ public class AlarmActivity extends BaseActivity {
     // Data
     private ArrayList<AlarmItemVO> mList = null;
 
+    private AlarmItemVO mSelectedItem = null;
     //--------------------------------------------------
 
     @Override
@@ -93,6 +94,7 @@ public class AlarmActivity extends BaseActivity {
     private void setBase() {
         mLayoutInflater = mActivity.getLayoutInflater();
         mList = new ArrayList<AlarmItemVO>();
+        mSelectedItem = new AlarmItemVO();
     }
     private void setData() {
         CommonPreferences.putString(mActivity, CommonPreferences.TAG_IS_NEW, "");
@@ -300,7 +302,9 @@ public class AlarmActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     AlarmItemVO item = mList.get(nowPosition);
+                    mSelectedItem = item;
                     String strItem = "";
+                    /*
                     try {
                         JSONObject jsonObject = item.getJSONObject();
                         if(jsonObject != null) {
@@ -313,6 +317,9 @@ public class AlarmActivity extends BaseActivity {
                     intent.putExtra("strItem", strItem);
                     setResult(RESULT_OK);
                     finish();
+                     */
+                    moveAlarmMarkerActivity(mSelectedItem);
+                    System.out.println(mSelectedItem.toString());
                 }
             });
 
@@ -340,6 +347,23 @@ public class AlarmActivity extends BaseActivity {
         }
 
         Intent intent = new Intent(mActivity, MainActivity.class);
+        intent.putExtra("strItem", strItem);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        finish();
+    }
+
+    public void moveAlarmMarkerActivity(AlarmItemVO item){
+        String strItem = "";
+        try {
+            JSONObject jsonObject = item.getJSONObject();
+            if(jsonObject != null) {
+                strItem = jsonObject.toString();
+            }
+        } catch (JSONException e) {
+        }
+        Intent intent = new Intent(mActivity, AlarmMarkerActivity.class);
         intent.putExtra("strItem", strItem);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);

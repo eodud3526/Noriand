@@ -23,7 +23,8 @@ public class CctvRoadViewActivity extends BaseActivity{
         mWebView.setWebViewClient(new WebViewClient());
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
-        mWebView.loadUrl("kakaomap://roadView?p=37.537229,127.005515");
+        mWebView.loadUrl("https://www.naver.com");
+        //mWebView.loadUrl("kakaomap://roadView?p=37.537229,127.005515");
     }
 
     private boolean appInstalledOrNot(String uri) {

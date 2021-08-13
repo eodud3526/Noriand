@@ -51,8 +51,8 @@ public class DeviceSettingActivity extends BaseActivity {
     private View mvRefreshInterval1 = null;
     private RelativeLayout mrlRefreshInterval5 = null;
     private View mvRefreshInterval5 = null;
-    private RelativeLayout mrlRefreshInterval10 = null;
-    private View mvRefreshInterval10 = null;
+    private RelativeLayout mrlRefreshInterval30 = null;
+    private View mvRefreshInterval30 = null;
     private RelativeLayout mrlRefreshInterval60 = null;
     private View mvRefreshInterval60 = null;
 
@@ -189,22 +189,22 @@ public class DeviceSettingActivity extends BaseActivity {
         if(mRefreshInterval == 1) {
             mvRefreshInterval1.setBackgroundResource(R.drawable.btn_check_pressed);
             mvRefreshInterval5.setBackgroundResource(R.drawable.btn_check);
-            mvRefreshInterval10.setBackgroundResource(R.drawable.btn_check);
+            mvRefreshInterval30.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval60.setBackgroundResource(R.drawable.btn_check);
         } else if(mRefreshInterval == 5) {
             mvRefreshInterval1.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval5.setBackgroundResource(R.drawable.btn_check_pressed);
-            mvRefreshInterval10.setBackgroundResource(R.drawable.btn_check);
+            mvRefreshInterval30.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval60.setBackgroundResource(R.drawable.btn_check);
         } else if(mRefreshInterval == 10) {
             mvRefreshInterval1.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval5.setBackgroundResource(R.drawable.btn_check);
-            mvRefreshInterval10.setBackgroundResource(R.drawable.btn_check_pressed);
+            mvRefreshInterval30.setBackgroundResource(R.drawable.btn_check_pressed);
             mvRefreshInterval60.setBackgroundResource(R.drawable.btn_check);
         } else if(mRefreshInterval == 60) {
             mvRefreshInterval1.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval5.setBackgroundResource(R.drawable.btn_check);
-            mvRefreshInterval10.setBackgroundResource(R.drawable.btn_check);
+            mvRefreshInterval30.setBackgroundResource(R.drawable.btn_check);
             mvRefreshInterval60.setBackgroundResource(R.drawable.btn_check_pressed);
         }
 
@@ -292,12 +292,12 @@ public class DeviceSettingActivity extends BaseActivity {
 
         mrlRefreshInterval1 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_1);
         mvRefreshInterval1 = (View)findViewById(R.id.v_device_setting_refresh_interval_1);
-        mrlRefreshInterval5 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_2);
-        mvRefreshInterval5 = (View)findViewById(R.id.v_device_setting_refresh_interval_2);
-        mrlRefreshInterval10 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_5);
-        mvRefreshInterval10 = (View)findViewById(R.id.v_device_setting_refresh_interval_5);
-        mrlRefreshInterval60 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_10);
-        mvRefreshInterval60 = (View)findViewById(R.id.v_device_setting_refresh_interval_10);
+        mrlRefreshInterval5 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_5);
+        mvRefreshInterval5 = (View)findViewById(R.id.v_device_setting_refresh_interval_5);
+        mrlRefreshInterval30 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_30);
+        mvRefreshInterval30 = (View)findViewById(R.id.v_device_setting_refresh_interval_30);
+        mrlRefreshInterval60 = (RelativeLayout)findViewById(R.id.rl_device_setting_refresh_interval_60);
+        mvRefreshInterval60 = (View)findViewById(R.id.v_device_setting_refresh_interval_60);
     }
 
     private void setListener() {
@@ -346,11 +346,11 @@ public class DeviceSettingActivity extends BaseActivity {
                 drawCheckAll();
             }
         });
-        mrlRefreshInterval10.setOnClickListener(new View.OnClickListener() {
+        mrlRefreshInterval30.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mRefreshInterval = 5;
-                mRefreshInterval = 10;
+                mRefreshInterval = 30;
                 drawCheckAll();
             }
         });

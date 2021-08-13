@@ -16,7 +16,7 @@
             android:gravity="center"
             android:text="알림 내역"/>
         <RelativeLayout
-            android:id="@+id/rl_action_history_prev"
+            android:id="@+id/rl_alarm_marker_prev"
             android:layout_width="60dp"
             android:layout_height="60dp" >
             <View

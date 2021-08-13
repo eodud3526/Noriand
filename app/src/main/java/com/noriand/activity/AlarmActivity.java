@@ -98,8 +98,6 @@ public class AlarmActivity extends BaseActivity {
     }
     private void setData() {
         CommonPreferences.putString(mActivity, CommonPreferences.TAG_IS_NEW, "");
-
-
         Intent intent = getIntent();
         String strItem = intent.getStringExtra("strItem");
         if(!StringUtil.isEmpty(strItem)) {
@@ -303,26 +301,10 @@ public class AlarmActivity extends BaseActivity {
                 public void onClick(View v) {
                     AlarmItemVO item = mList.get(nowPosition);
                     mSelectedItem = item;
-                    String strItem = "";
-                    /*
-                    try {
-                        JSONObject jsonObject = item.getJSONObject();
-                        if(jsonObject != null) {
-                            strItem = jsonObject.toString();
-                        }
-                    } catch (JSONException e) {
-                    }
-
-                    Intent intent = getIntent();
-                    intent.putExtra("strItem", strItem);
-                    setResult(RESULT_OK);
-                    finish();
-                     */
                     moveAlarmMarkerActivity(mSelectedItem);
                     System.out.println(mSelectedItem.toString());
                 }
             });
-
             return convertView;
         }
     }

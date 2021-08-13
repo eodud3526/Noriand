@@ -181,27 +181,6 @@
                     android:text="1분"/>
             </RelativeLayout>
             <RelativeLayout
-                android:id="@+id/rl_device_setting_refresh_interval_2"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:paddingLeft="10dp">
-                <View
-                    android:id="@+id/v_device_setting_refresh_interval_2"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/btn_check"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="34dp"
-                    android:paddingRight="10dp"
-                    android:textColor="#000"
-                    android:textSize="16dp"
-                    android:gravity="center_vertical"
-                    android:text="5분"/>
-            </RelativeLayout>
-            <RelativeLayout
                 android:id="@+id/rl_device_setting_refresh_interval_5"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -220,15 +199,36 @@
                     android:textColor="#000"
                     android:textSize="16dp"
                     android:gravity="center_vertical"
-                    android:text="10분"/>
+                    android:text="5분"/>
             </RelativeLayout>
             <RelativeLayout
-                android:id="@+id/rl_device_setting_refresh_interval_10"
+                android:id="@+id/rl_device_setting_refresh_interval_30"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="10dp">
                 <View
-                    android:id="@+id/v_device_setting_refresh_interval_10"
+                    android:id="@+id/v_device_setting_refresh_interval_30"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/btn_check"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="34dp"
+                    android:paddingRight="10dp"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:text="30분"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_device_setting_refresh_interval_60"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingLeft="10dp">
+                <View
+                    android:id="@+id/v_device_setting_refresh_interval_60"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="8dp"

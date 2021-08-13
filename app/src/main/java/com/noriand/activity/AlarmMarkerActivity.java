@@ -41,7 +41,6 @@ public class AlarmMarkerActivity extends BaseActivity{
     private ArrayList<AlarmItemVO> mAlarmList = null;
     private ArrayList<SafeZoneItemVO> mSafeZoneList = null;
     private AlarmItemVO mItem;
-    private String date = "";
 
     private CalloutBalloonAdapter mCalloutBalloonListener = null;
     private MapView.POIItemEventListener mPoiItemEventListener = null;
@@ -74,7 +73,7 @@ public class AlarmMarkerActivity extends BaseActivity{
         mtvToday = (TextView)findViewById(R.id.tv_main_today);
         mtvAddress = (TextView)findViewById(R.id.tv_main_address);
         mrlMap = (RelativeLayout) findViewById(R.id.rl_map);
-        mrlPrev = (RelativeLayout)findViewById(R.id.rl_action_history_prev);
+        mrlPrev = (RelativeLayout)findViewById(R.id.rl_alarm_marker_prev);
         try {
             mmv = new MapView(mActivity);
             mrlMap.addView(mmv);
@@ -190,7 +189,7 @@ public class AlarmMarkerActivity extends BaseActivity{
             }
         };
     }
-
+    /*
     private void drawAlarmMarker() {
         if(mmv == null || mAlarmList == null) {
             return;
@@ -200,16 +199,12 @@ public class AlarmMarkerActivity extends BaseActivity{
         if(size == 0) {
             return;
         }
-
         mmv.removeAllPOIItems();
-
         for(int i=0; i<size; i++) {
             AlarmItemVO item = mAlarmList.get(i);
-
             String name = item.insertTime;
             String x = item.x;
             String y = item.y;
-
             if(!StringUtil.isEmpty(x) && !StringUtil.isEmpty(y)) {
 
                 double dX = Double.parseDouble(x);
@@ -234,13 +229,17 @@ public class AlarmMarkerActivity extends BaseActivity{
                         double circleX = Double.parseDouble(mSafeZoneList.get(j).x);
                         int mBoundary = mSafeZoneList.get(j).boundary;
                         MapPoint mapPoint2 = MapPoint.mapPointWithGeoCoord(circleY, circleX);
-                        MapCircle mapCircle = new MapCircle(mapPoint2, mBoundary, Color.argb(128, 255, 0, 0), Color.argb(128, 255, 255, 0));
+                        MapCircle mapCircle = new MapCircle(mapPoint2, mBoundary,
+                                Color.argb(128, 255, 0, 0), Color.argb(128, 255, 255, 0));
+                        mapCircle.setCenter(MapPoint.mapPointWithGeoCoord(circleY, circleX));
                         mmv.addCircle(mapCircle);
                     }
                 }
             }
         }
     }
+     */
+
     private void resetMapView() {
         if(mmv == null) {
             return;
@@ -269,7 +268,7 @@ public class AlarmMarkerActivity extends BaseActivity{
         requestItem.userNo = userNo;
         requestItem.deviceNo = deviceNo;
         requestItem.isSilent = false;
-        networkGetSafeZoneArray(requestItem);
+        networkGetAlarmMarker(requestItem);
     }
     private void onBack() {
         finish();
@@ -283,7 +282,7 @@ public class AlarmMarkerActivity extends BaseActivity{
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
-    private void networkGetSafeZoneArray(final RequestGetSafeZoneArrayVO requestItem) {
+    private void networkGetAlarmMarker(final RequestGetSafeZoneArrayVO requestItem) {
         mApiController.getSafeZoneArray(mActivity, requestItem, new ApiController.ApiGetSafeZoneArrayListener() {
             @Override
             public void onSuccess(ResponseGetSafeZoneArrayVO item) {
@@ -303,14 +302,63 @@ public class AlarmMarkerActivity extends BaseActivity{
                         mSafeZoneList.add(safeZoneItem);
                     }
                 }
-                drawAlarmMarker();
+                if(mmv == null || mAlarmList == null) {
+                    return;
+                }
+
+                int size = mAlarmList.size();
+                if(size == 0) {
+                    return;
+                }
+
+                mmv.removeAllPOIItems();
+                for(int i=0; i<size; i++) {
+                    AlarmItemVO alarmItem = mAlarmList.get(i);
+
+                    String name = alarmItem.insertTime;
+                    String x = alarmItem.x;
+                    String y = alarmItem.y;
+
+                    if(!StringUtil.isEmpty(x) && !StringUtil.isEmpty(y)) {
+
+                        double dX = Double.parseDouble(x);
+                        double dY = Double.parseDouble(y);
+
+                        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(dY, dX);
+                        MapPOIItem marker = new MapPOIItem();
+
+                        marker.setItemName(name);
+                        marker.setTag(i);
+                        marker.setMapPoint(mapPoint);
+                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+                        marker.setCustomImageResourceId(R.drawable.ico_pin_brown); // 마커 이미지.
+                        marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                        marker.setCustomImageAnchor(0.5f, 0.5f);
+                        mmv.addPOIItem(marker);
+                        mmv.setMapCenterPoint(mapPoint, true);
+
+                        double circleY = 0, circleX = 0;
+                        int mBoundary = 0;
+                        for(int j=0; j<mSafeZoneList.size(); j++){
+                            if(alarmItem.safeZoneNo == mSafeZoneList.get(j).no){
+                                circleY = Double.parseDouble(mSafeZoneList.get(j).y);
+                                circleX = Double.parseDouble(mSafeZoneList.get(j).x);
+                                mBoundary = mSafeZoneList.get(j).boundary;
+                            }
+                        }
+                        MapPoint mapPoint2 = MapPoint.mapPointWithGeoCoord(circleY, circleX);
+                        MapCircle mapCircle = new MapCircle(mapPoint2, mBoundary, Color.argb(128, 255, 0, 0),
+                                Color.argb(128, 255, 255, 0));
+                        mmv.addCircle(mapCircle);
+                    }
+                }
             }
             @Override
             public void onFail() {
                 showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        networkGetSafeZoneArray(requestItem);
+                        networkGetAlarmMarker(requestItem);
                     }
                     @Override
                     public void onCancel() {

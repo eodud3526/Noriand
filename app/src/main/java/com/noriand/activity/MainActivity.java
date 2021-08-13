@@ -3,6 +3,7 @@ package com.noriand.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -124,6 +125,7 @@ public class MainActivity extends BaseActivity {
     private String mLastTime = "";
 
     // --------------------------------------------------
+    private Handler handler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,7 @@ public class MainActivity extends BaseActivity {
         mItem = new DeviceItemVO();
         mTraceList = new ArrayList<TraceItemVO>();
 
+        handler = new Handler();
     }
 
     private void setLayout() {
@@ -460,7 +463,8 @@ public class MainActivity extends BaseActivity {
         mrlCctv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogOneButton("기능 준비중입니다.");
+                //showDialogOneButton("기능 준비중입니다.");
+                moveCctvRoadViewActivity();
             }
         });
         mrlSiren.setOnClickListener(new View.OnClickListener() {
@@ -867,7 +871,7 @@ public class MainActivity extends BaseActivity {
                     showDialogOneButton("최근 기록이 없습니다.");
                     return;
                 }
-
+                mTraceList.clear();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar c = Calendar.getInstance();
                 String date = sdf.format(c.getTime());
@@ -1106,6 +1110,8 @@ public class MainActivity extends BaseActivity {
                     showDialogOneButton("최근 기록이 없습니다.");
                     return;
                 }
+                mTraceList.clear();
+
                 TraceItemVO lastItem = traceArray[0];
                 mTraceList.add(lastItem);
                 mLastTime = lastItem.insertTime;
@@ -1143,5 +1149,12 @@ public class MainActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    public void moveCctvRoadViewActivity(){
+        Intent intent = new Intent(mActivity, CctvRoadViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 }

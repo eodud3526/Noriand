@@ -464,7 +464,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //showDialogOneButton("기능 준비중입니다.");
-                moveCctvRoadViewActivity();
+                moveCctvRoadViewActivity(mTraceList.get(0));
             }
         });
         mrlSiren.setOnClickListener(new View.OnClickListener() {
@@ -1151,10 +1151,19 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public void moveCctvRoadViewActivity(){
+    public void moveCctvRoadViewActivity(TraceItemVO item){
+        String strItem = "";
+        try {
+            JSONObject jsonObject = item.getJSONObject();
+            if(jsonObject != null) {
+                strItem = jsonObject.toString();
+            }
+        } catch (JSONException e) {
+        }
         Intent intent = new Intent(mActivity, CctvRoadViewActivity.class);
+        intent.putExtra("strItem", strItem);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_DEVICE_UPDATE);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 }

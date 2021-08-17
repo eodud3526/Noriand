@@ -1,6 +1,6 @@
 package com.noriand.activity;
 
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.WebSettings;
@@ -8,10 +8,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.noriand.R;
+import com.noriand.util.StringUtil;
+import com.noriand.vo.TraceItemVO;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 public class CctvRoadViewActivity extends BaseActivity{
     private WebView mWebView;
     private WebSettings mWebSettings;
+    private String x = "";
+    private String y = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -23,19 +32,34 @@ public class CctvRoadViewActivity extends BaseActivity{
         mWebView.setWebViewClient(new WebViewClient());
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
-        mWebView.loadUrl("https://www.naver.com");
-        //mWebView.loadUrl("kakaomap://roadView?p=37.537229,127.005515");
-    }
+        setData();
 
-    private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
+        String url = "kakaomap://roadView?p=" +y+","+x;
+        //System.out.println(url);
+
+        Intent intent = null;
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
+            intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-
-        return false;
+        startActivity(intent);
     }
 
+    private void setData() {
+        Intent intent = getIntent();
+        String strItem = intent.getStringExtra("strItem");
+        if(!StringUtil.isEmpty(strItem)) {
+            TraceItemVO item = new TraceItemVO();
+            try {
+                JSONObject jsonObject = new JSONObject(strItem);
+                item.parseJSONObject(jsonObject);
+            } catch(JSONException e) {
+            }
+            if(item != null) {
+                x = item.x;
+                y = item.y;
+            }
+        }
+    }
 }

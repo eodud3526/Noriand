@@ -3,7 +3,6 @@ package com.noriand.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -125,7 +124,6 @@ public class MainActivity extends BaseActivity {
     private String mLastTime = "";
 
     // --------------------------------------------------
-    private Handler handler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +141,6 @@ public class MainActivity extends BaseActivity {
     private void setBase() {
         mItem = new DeviceItemVO();
         mTraceList = new ArrayList<TraceItemVO>();
-
-        handler = new Handler();
     }
 
     private void setLayout() {
@@ -755,7 +751,7 @@ public class MainActivity extends BaseActivity {
                             }
                         }
                     }
-                    mtvToday.setText(today);
+                    mtvToday.setText("마지막으로 통신한 시간 : " + today);
 
                     if (mmv != null && !StringUtil.isEmpty(xTemp) && !StringUtil.isEmpty(yTemp)) {
                         mmv.removeAllPOIItems();
@@ -879,6 +875,10 @@ public class MainActivity extends BaseActivity {
                     if (traceArray[i].insertTime.substring(0,10).equals(date)){
                         mTraceList.add(traceArray[i]);
                     }
+                }
+                if(mTraceList.size() == 0){
+                    showDialogOneButton("오늘 경로 기록이 존재하지 않습니다.");
+                    return;
                 }
                 drawTraceArray();
             }

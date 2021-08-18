@@ -1,5 +1,6 @@
 package com.noriand.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.noriand.R;
@@ -59,6 +61,17 @@ public class DeviceSelectActivity extends BaseActivity {
     private View mvFooterAdd = null;
 
     private Button mbtAutoScrollTop = null;
+
+    private DrawerLayout mdl = null;
+    private RelativeLayout mrlMainMenuArea = null;
+    private DrawerLayout.DrawerListener mDrawerListener = null;
+    private Button mbtnMenu = null;
+
+    private RelativeLayout mrlDeviceList = null;
+    private RelativeLayout mrlAlarmSetting = null;
+    private RelativeLayout mrlUserGuide = null;
+    private RelativeLayout mrlTermsOfService = null;
+    private RelativeLayout mrlLogOut = null;
     //--------------------------------------------------
     // Data
     private ArrayList<DeviceItemVO> mList = null;
@@ -125,6 +138,16 @@ public class DeviceSelectActivity extends BaseActivity {
     }
 
     private void setLayout() {
+        mdl = (DrawerLayout)findViewById(R.id.dl_main);
+        mrlMainMenuArea = (RelativeLayout)findViewById(R.id.rl_main_menu);
+        mbtnMenu = (Button)findViewById(R.id.btn_main_menu);
+
+        mrlDeviceList = (RelativeLayout)findViewById(R.id.rl_main_device_list);
+        mrlAlarmSetting = (RelativeLayout)findViewById(R.id.rl_main_alarm_setting);
+        mrlUserGuide = (RelativeLayout)findViewById(R.id.rl_main_user_guide);
+        mrlTermsOfService = (RelativeLayout)findViewById(R.id.rl_main_terms_of_service);
+        mrlLogOut = (RelativeLayout)findViewById(R.id.rl_main_log_out);
+
         msrl = (VerticalSwipeRefreshLayout)findViewById(R.id.srl_device_select);
         mlv = (ListView) findViewById(R.id.lv_device_select);
         mrlEmpty = (RelativeLayout)findViewById(R.id.rl_device_select_empty);
@@ -186,6 +209,89 @@ public class DeviceSelectActivity extends BaseActivity {
         };
         mvEmptyAdd.setOnClickListener(addDeviceLister);
         mvFooterAdd.setOnClickListener(addDeviceLister);
+
+
+        mDrawerListener = new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerStateChanged(int arg0) {
+            }
+
+            @Override
+            public void onDrawerSlide(View v, float x) {
+                mdl.bringChildToFront(v);
+                mdl.requestLayout();
+            }
+
+            @Override
+            public void onDrawerOpened(View arg0) {
+                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_close); // 주석확인
+            }
+
+            @Override
+            public void onDrawerClosed(View arg0) {
+                mbtnMenu.setBackgroundResource(R.drawable.selector_btn_menu); // 주석확인
+            }
+        };
+        mdl.addDrawerListener(mDrawerListener);
+
+        mbtnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mdl.isDrawerOpen(mrlMainMenuArea)) {
+                    mdl.closeDrawers();
+                } else {
+                    mdl.openDrawer(mrlMainMenuArea);
+                }
+            }
+        });
+
+        mrlDeviceList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdl.closeDrawers();
+                showDialogOneButton("기능 준비중입니다.");
+            }
+        });
+        mrlAlarmSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdl.closeDrawers();
+                showDialogOneButton("기능 준비중입니다.");
+            }
+        });
+        mrlUserGuide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdl.closeDrawers();
+                showDialogOneButton("기능 준비중입니다.");
+            }
+        });
+        mrlTermsOfService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdl.closeDrawers();
+                showDialogOneButton("기능 준비중입니다.");
+            }
+        });
+        mrlLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdl.closeDrawers();
+                showDialogTwoButton("로그아웃 하시겠습니까?", new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        Intent intent = new Intent(mActivity, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        Context context = getApplicationContext();
+                        Toast.makeText(context, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
 
     }
 

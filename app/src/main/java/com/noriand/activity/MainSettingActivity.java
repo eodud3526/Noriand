@@ -63,7 +63,7 @@ public class MainSettingActivity extends BaseActivity{
     private int mDeviceNo = 0;
 
 
-    private RelativeLayout mrlSubMenuArea = null;
+    //private RelativeLayout mrlSubMenuArea = null;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class MainSettingActivity extends BaseActivity{
         mrlDelete = (RelativeLayout)findViewById(R.id.rl_device_write_delete);
 
         mrlSubPencil = (RelativeLayout)findViewById(R.id.rl_main_submenu_pencil);
-        mrlSubMenuArea = (RelativeLayout)findViewById(R.id.rl_main_sub_menu);
+        //mrlSubMenuArea = (RelativeLayout)findViewById(R.id.rl_main_sub_menu);
         mrlSubDeviceNumber = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_device_number);
         mrlShareFriend = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_share_friend);
         mrlAlarm = (RelativeLayout)findViewById(R.id.rl_main_sub_menu_alarm);
@@ -183,6 +183,7 @@ public class MainSettingActivity extends BaseActivity{
                         requestItem.deviceNo = mDeviceNo;
                         requestItem.userNo = userNo;
                         networkDeleteDevice(requestItem);
+                        moveDeviceSelectActivity();
                     }
                     @Override
                     public void onCancel() {

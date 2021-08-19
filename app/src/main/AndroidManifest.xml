@@ -38,6 +38,14 @@
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="oauth"
+                    android:scheme="022464c0ec3699f33660bd7862bbe810"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activity.JoinActivity"
             android:screenOrientation="portrait"

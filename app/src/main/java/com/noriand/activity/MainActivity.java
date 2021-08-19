@@ -135,7 +135,6 @@ public class MainActivity extends BaseActivity {
         setBase();
         setLayout();
         setListener();
-
     }
 
     private void setBase() {
@@ -219,6 +218,7 @@ public class MainActivity extends BaseActivity {
         if(mTimer != null) {
             mTimer.cancel();
         }
+
     }
 
 
@@ -441,7 +441,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //showDialogOneButton("기능 준비중입니다.");
-                refresh();
+                int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+                String ltid = CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID);
+                RequestGetTraceArrayVO requestItem = new RequestGetTraceArrayVO();
+                requestItem.deviceNo = mItem.no;
+                requestItem.userNo = userNo;
+                requestItem.ltid = ltid;
+                networkGetLastTraceItem(requestItem);
                 moveWhatActivity(mTraceList.get(0));
             }
         });
@@ -461,7 +467,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //showDialogOneButton("기능 준비중입니다.");
-                refresh();
+                int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+                String ltid = CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID);
+                RequestGetTraceArrayVO requestItem = new RequestGetTraceArrayVO();
+                requestItem.deviceNo = mItem.no;
+                requestItem.userNo = userNo;
+                requestItem.ltid = ltid;
+                networkGetLastTraceItem(requestItem);
                 moveCctvRoadViewActivity(mTraceList.get(0));
             }
         });
@@ -488,6 +500,7 @@ public class MainActivity extends BaseActivity {
         if(rowNo == 0) {
             int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
             int deviceNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_DEVICE_NO);
+
             RequestGetDeviceArrayVO requestItem = new RequestGetDeviceArrayVO();
             requestItem.onChangeDeviceArrayForDevice(deviceNo);
             requestItem.userNo = userNo;
@@ -1113,7 +1126,6 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 mTraceList.clear();
-
                 TraceItemVO lastItem = traceArray[0];
                 mTraceList.add(lastItem);
                 mLastTime = lastItem.insertTime;
@@ -1185,4 +1197,46 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CODE_DEVICE_UPDATE);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
+    private void networkGetLastTraceItem(final RequestGetTraceArrayVO requestItem) {
+        mApiController.getTraceArray(mActivity, requestItem, new ApiController.ApiGetTraceArrayListener() {
+            @Override
+            public void onSuccess(ResponseGetTraceArrayVO item) {
+                if(item == null) {
+                    showDialogOneButton(getResources().getString(R.string.please_retry_network));
+                    return;
+                }
+                if(!item.isConfirm) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+                TraceItemVO[] traceArray = item.traceArray;
+                if(item.traceArray == null) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+                int length = traceArray.length;
+                if(length == 0) {
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
+                mTraceList.clear();
+                TraceItemVO lastItem = traceArray[0];
+                mTraceList.add(lastItem);
+            }
+            @Override
+            public void onFail() {
+                showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        networkGetLastMarker(requestItem);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
+    }
+
 }

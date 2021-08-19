@@ -426,15 +426,19 @@ public class DeviceSelectActivity extends BaseActivity {
                 holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_off);
             } else if(batteryCount > 200) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_04);
+                isDeviceOn = true;
                 holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 150) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_03);
+                isDeviceOn = true;
                 holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 100) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_02);
+                isDeviceOn = true;
                 holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             } else if(batteryCount > 50) {
                 holder.vBattery.setBackgroundResource(R.drawable.ico_battery_01);
+                isDeviceOn = true;
                 holder.vDeviceOn.setBackgroundResource(R.drawable.ico_is_device_on);
             }
 

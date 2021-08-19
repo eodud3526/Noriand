@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kakao.sdk.common.KakaoSdk;
 import com.noriand.R;
 import com.noriand.common.CommonPreferences;
 import com.noriand.network.ApiController;
@@ -65,7 +66,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void setBase() {
-
+        KakaoSdk.init(this, "022464c0ec3699f33660bd7862bbe810");
     }
 
     private void setLayout() {

@@ -162,16 +162,18 @@ public class SplashActivity extends BaseActivity {
 
     public void checkMoveMainActivity() {
         if(isGetToken && isAnimation) {
+            /* 자동 로그인 & 앱 종료해도 로그인 유지
             int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
             if(userNo > 0) {
                 String email = CommonPreferences.getString(mActivity, CommonPreferences.TAG_EMAIL);
-
                 RequestLoginVO requestItem = new RequestLoginVO(mActivity);
                 requestItem.setLoginForAuto(userNo, email);
                 networkLoginForAuto(requestItem);
             } else {
                 moveLoginActivity();
             }
+             */
+            moveLoginActivity();
         }
     }
 

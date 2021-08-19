@@ -122,7 +122,6 @@ public class DeviceWriteActivity extends BaseActivity {
         mbtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String name = metName.getText().toString();
                 if (StringUtil.isEmpty(name)) {
                     showDialogOneButton("이름을 입력해 주세요.", new CommonDialog.DialogConfirmListener() {
@@ -182,7 +181,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
-                if (!ltid.substring(0,23).equals("0000090870b3d5676000e8")) {
+                if (!ltid.substring(0,22).equals("0000090870b3d5676000e8")) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
@@ -241,7 +240,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     return;
                 }
                 if(requestItem.ltid.equals(CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID))){
-                    //CommonPreferences.resetPreferences(getApplicationContext());
+                    CommonPreferences.resetPreferences(getApplicationContext());
                     showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
@@ -267,7 +266,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
-                if(!requestItem.ltid.substring(0,23).equals("0000090870b3d5676000e8")) {
+                if(!requestItem.ltid.substring(0,22).equals("0000090870b3d5676000e8")) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {

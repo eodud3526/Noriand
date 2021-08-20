@@ -162,7 +162,7 @@ public class SplashActivity extends BaseActivity {
 
     public void checkMoveMainActivity() {
         if(isGetToken && isAnimation) {
-            /* 자동 로그인 & 앱 종료해도 로그인 유지
+            // 자동 로그인
             int userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
             if(userNo > 0) {
                 String email = CommonPreferences.getString(mActivity, CommonPreferences.TAG_EMAIL);
@@ -172,8 +172,7 @@ public class SplashActivity extends BaseActivity {
             } else {
                 moveLoginActivity();
             }
-             */
-            moveLoginActivity();
+            //moveLoginActivity();
         }
     }
 

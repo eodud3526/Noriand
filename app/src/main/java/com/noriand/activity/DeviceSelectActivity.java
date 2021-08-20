@@ -77,6 +77,7 @@ public class DeviceSelectActivity extends BaseActivity {
     private ArrayList<DeviceItemVO> mList = null;
     private boolean isPressBack = false;
     private boolean isDeviceOn = true;
+    private boolean isStarTapped = false;
     //--------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,6 +286,7 @@ public class DeviceSelectActivity extends BaseActivity {
                         startActivity(intent);
                         Context context = getApplicationContext();
                         Toast.makeText(context, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                        CommonPreferences.resetPreferences(context);
                     }
                     @Override
                     public void onCancel() {
@@ -463,14 +465,18 @@ public class DeviceSelectActivity extends BaseActivity {
             });
             holder.rlStar.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    showDialogOneButton("기능 준비중입니다.");
+                public void onClick(View v){
+                    //showDialogOneButton("기능 준비중입니다.");
                 }
             });
             holder.rlPeople.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showDialogOneButton("기능 준비중입니다.");
+                    CommonPreferences.putInt(mActivity, CommonPreferences.TAG_DEVICE_NO, item.no);
+                    CommonPreferences.putString(mActivity, CommonPreferences.TAG_DEVICE_LTID, item.ltid);
+                    DeviceItemVO item = mList.get(nowPosition);
+                    moveKakaoLinkActivity(item);
+                    //showDialogOneButton("기능 준비중입니다.");
                 }
             });
             holder.rlSetting.setOnClickListener(new View.OnClickListener() {
@@ -554,6 +560,23 @@ public class DeviceSelectActivity extends BaseActivity {
         }
 
         Intent intent = new Intent(mActivity, MainSettingActivity.class);
+        intent.putExtra("strItem", strItem);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        finish();
+    }
+
+    public void moveKakaoLinkActivity(DeviceItemVO item) {
+        String strItem = "";
+        try {
+            JSONObject jsonObject = item.getJSONObject();
+            if(jsonObject != null) {
+                strItem = jsonObject.toString();
+            }
+        } catch (JSONException e) {
+        }
+        Intent intent = new Intent(mActivity, KakaoLinkActivity.class);
         intent.putExtra("strItem", strItem);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
@@ -652,5 +675,6 @@ public class DeviceSelectActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CODE_DEVICE_WRITE);
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
 
 }

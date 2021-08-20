@@ -747,7 +747,6 @@ public class MainActivity extends BaseActivity {
                     int batteryCount = item.batteryCount;
                     String xTemp = item.x;
                     String yTemp = item.y;
-
                     mmv.removeAllCircles();
                     SafeZoneItemVO[] safeZoneArray = item.safeZoneArray;
                     if (safeZoneArray != null) {
@@ -775,7 +774,7 @@ public class MainActivity extends BaseActivity {
                         double y = Double.parseDouble(yTemp);
                         MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(y, x);
                         mMarker = new MapPOIItem();
-                        mMarker.setItemName(mItem.name);
+                        mMarker.setItemName(today.substring(0,16));
                         mMarker.setTag(999);
                         mMarker.setMapPoint(mapPoint);
                         mMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
@@ -1128,6 +1127,10 @@ public class MainActivity extends BaseActivity {
                 mTraceList.clear();
                 TraceItemVO lastItem = traceArray[0];
                 mTraceList.add(lastItem);
+                if(mTraceList.size()==0){
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
                 mLastTime = lastItem.insertTime;
                 mtvToday.setText("마지막으로 통신한 시간 : " + mLastTime);
                 String strLastX = lastItem.x;
@@ -1223,6 +1226,10 @@ public class MainActivity extends BaseActivity {
                 mTraceList.clear();
                 TraceItemVO lastItem = traceArray[0];
                 mTraceList.add(lastItem);
+                if(mTraceList.size()==0){
+                    showDialogOneButton("최근 기록이 없습니다.");
+                    return;
+                }
             }
             @Override
             public void onFail() {

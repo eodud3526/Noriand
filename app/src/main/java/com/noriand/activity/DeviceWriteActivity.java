@@ -18,12 +18,16 @@ import com.noriand.util.StringUtil;
 import com.noriand.view.dialog.CommonDialog;
 import com.noriand.vo.DeviceItemVO;
 import com.noriand.vo.request.RequestDeleteDeviceVO;
+import com.noriand.vo.request.RequestGetDeviceArrayVO;
 import com.noriand.vo.request.RequestWriteDeviceVO;
+import com.noriand.vo.response.ResponseGetDeviceArrayVO;
 import com.noriand.vo.response.ResponseVO;
 import com.noriand.vo.response.ResponseWriteDeviceVO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class DeviceWriteActivity extends BaseActivity {
@@ -49,6 +53,8 @@ public class DeviceWriteActivity extends BaseActivity {
     // Data
     private boolean isEditMode = false;
     private int mDeviceNo = 0;
+    private DeviceItemVO mItem = null;
+    private ArrayList<DeviceItemVO> mList = null;
     // --------------------------------------------------
 
     @Override
@@ -69,6 +75,7 @@ public class DeviceWriteActivity extends BaseActivity {
     }
 
     private void setBase() {
+        mList = new ArrayList<>();
     }
 
     private void setData() {
@@ -96,6 +103,10 @@ public class DeviceWriteActivity extends BaseActivity {
         } else {
             setImage(mActivity, miv, BASE_PICTURE_URL, null);
         }
+        RequestGetDeviceArrayVO requestItem = new RequestGetDeviceArrayVO();
+        requestItem.userNo = CommonPreferences.getInt(mActivity, CommonPreferences.TAG_USER_NO);
+        networkGetDeviceArray(requestItem);
+        System.out.println();
     }
 
     private void setLayout() {
@@ -152,8 +163,32 @@ public class DeviceWriteActivity extends BaseActivity {
                     return;
                 }
                 if (CommonPreferences.getString(mActivity, CommonPreferences.TAG_DEVICE_LTID).equals(ltid)){
-                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.");
+                    showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재합니다.", new CommonDialog.DialogConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            StringUtil.selectionLast(metLtid);
+                        }
+
+                        @Override
+                        public void onCancel() {
+                        }
+                    });
                     return;
+                }
+                for(int i=0; i<mList.size(); i++){
+                    if(ltid.equals(mList.get(i).ltid)){
+                        showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재합니다.", new CommonDialog.DialogConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                StringUtil.selectionLast(metLtid);
+                            }
+
+                            @Override
+                            public void onCancel() {
+                            }
+                        });
+                        return;
+                    }
                 }
                 if (!StringUtil.isValidString(ltid)) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
@@ -181,7 +216,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
-                if (!ltid.substring(0,22).equals("0000090870b3d5676000e8")) {
+                if (!ltid.startsWith("00000908")) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
@@ -253,6 +288,21 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
+                for(int i=0; i<mList.size(); i++){
+                    if(requestItem.ltid.equals(mList.get(i).ltid)){
+                        showDialogOneButton("이미 해당 고유번호로 등록된 기기가 존재 합니다.", new CommonDialog.DialogConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                StringUtil.selectionLast(metLtid);
+                            }
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
+                        return;
+                    }
+                }
                 if(requestItem.ltid.length() != 24) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
@@ -266,7 +316,7 @@ public class DeviceWriteActivity extends BaseActivity {
                     });
                     return;
                 }
-                if(!requestItem.ltid.substring(0,22).equals("0000090870b3d5676000e8")) {
+                if(!requestItem.ltid.startsWith("00000908")) {
                     showDialogOneButton("잘못된 고유번호 입니다.", new CommonDialog.DialogConfirmListener() {
                         @Override
                         public void onConfirm() {
@@ -402,5 +452,42 @@ public class DeviceWriteActivity extends BaseActivity {
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void networkGetDeviceArray(final RequestGetDeviceArrayVO requestItem) {
+        mApiController.getDeviceArray(mActivity, requestItem, new ApiController.ApiGetDeviceArrayListener() {
+            @Override
+            public void onSuccess(ResponseGetDeviceArrayVO item) {
+                if(item == null) {
+                    showDialogOneButton(getResources().getString(R.string.please_retry_network));
+                    return;
+                }
+
+                if(!item.isConfirm) {
+                    return;
+                }
+                mList.clear();
+                DeviceItemVO[] deviceArray = item.deviceArray;
+                if(deviceArray != null) {
+                    int deviceArraySize = deviceArray.length;
+                    for (int i = 0; i < deviceArraySize; i++) {
+                        DeviceItemVO deviceItem = deviceArray[i];
+                        mList.add(deviceItem);
+                    }
+                }
+            }
+            @Override
+            public void onFail() {
+                showRetryDialogTwoButton(new CommonDialog.DialogConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        networkGetDeviceArray(requestItem);
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        });
     }
 }

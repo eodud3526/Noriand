@@ -48,7 +48,7 @@
                 android:textSize="10dp"
                 android:textColor="#6b37ff"
                 android:layout_marginTop="40dp"
-                android:text="0분마다"/>
+                android:text="1분마다"/>
             <View
                 android:id="@+id/v_row_device_safe_zone"
                 android:layout_width="18dp"
@@ -99,7 +99,7 @@
                     android:layout_marginTop="8dp"
                     android:duplicateParentState="true"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/selector_btn_star"/>
+                    android:background="@drawable/selector_btn_star" />
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rl_row_device_people"
